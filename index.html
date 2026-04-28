@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Poker Flash">
+<meta name="theme-color" content="#0a0a0f">
+<title>Poker Flashcard — ヨコサワ式</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --surface2: #1c1c26;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0eff8;
+  --muted: rgba(240,239,248,0.42);
+  --hint: rgba(240,239,248,0.18);
+  --green: #2dd4a0; --green-bg: rgba(45,212,160,0.12);
+  --red: #f26b6b;   --red-bg: rgba(242,107,107,0.12);
+  --blue: #7b9eff;  --blue-bg: rgba(123,158,255,0.12);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;flex-direction:column;}
+
+.screen{display:none;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;}
+.screen.active{display:flex;}
+
+/* HOME */
+#home{overflow-y:auto;padding:1.75rem 1.25rem 2rem;}
+.home-logo{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:1.25rem;}
+.home-title{font-size:clamp(1.7rem,7vw,2.6rem);font-weight:800;line-height:1.1;margin-bottom:.4rem;}
+.home-title span{color:var(--blue);}
+.home-sub{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:1.5rem;}
+.section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;margin-top:1.25rem;}
+
+.all-tile{padding:12px 14px;border-radius:12px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:6px;transition:all .15s;}
+.all-tile-icon{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;color:var(--blue);}
+.at-name{font-size:13px;font-weight:600;}
+.at-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+
+.rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:1.25rem;}
+.rank-tile{padding:10px 8px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;}
+.rt-badge{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:3px;}
+.rt-name{font-size:9px;color:var(--muted);line-height:1.3;}
+.rt-pos{font-size:8px;margin-top:2px;}
+.rt-cnt{font-size:9px;color:var(--muted);margin-top:2px;}
+
+.start-btn{width:100%;padding:16px;background:var(--blue);color:#0a0a0f;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s,transform .1s;}
+.start-btn:active{transform:scale(.97);opacity:.9;}
+
+/* QUIZ */
+#quiz{padding:0;}
+.quiz-header{padding:.9rem 1.25rem .6rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.back-btn{background:none;border:none;color:var(--muted);font-size:13px;font-family:'Syne',sans-serif;cursor:pointer;padding:4px 0;}
+.mode-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 1.25rem .6rem;flex-shrink:0;}
+.stat-box{background:var(--surface);border-radius:10px;padding:7px 10px;text-align:center;}
+.stat-box .sv{font-size:19px;font-weight:600;font-family:'DM Mono',monospace;}
+.stat-box .sl{font-size:9px;color:var(--muted);margin-top:1px;}
+
+.prog-wrap{padding:0 1.25rem .5rem;flex-shrink:0;}
+.prog-track{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s;}
+
+.card-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:0 1.25rem;min-height:0;}
+.flashcard{
+  width:100%;max-width:380px;
+  background:var(--surface);border:1px solid var(--border);border-radius:22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.5rem 1.25rem 1.25rem;
+  cursor:pointer;transition:transform .15s,border-color .2s;
+  position:relative;overflow:hidden;user-select:none;
+}
+.flashcard:active{transform:scale(.97);}
+.card-watermark{position:absolute;right:-8px;bottom:-18px;font-size:100px;font-weight:800;opacity:.04;font-family:'DM Mono',monospace;pointer-events:none;}
+.hand-text{font-family:'DM Mono',monospace;font-size:clamp(2.8rem,13vw,4.5rem);font-weight:500;letter-spacing:3px;line-height:1;margin-bottom:.25rem;}
+.hand-text.red{color:var(--red);}
+.tap-hint{font-size:11px;color:var(--hint);margin-top:.5rem;letter-spacing:.06em;}
+
+.reveal-wrap{width:100%;margin-top:.75rem;display:none;flex-direction:column;align-items:center;gap:.5rem;}
+.reveal-wrap.show{display:flex;}
+.rank-pill{font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 14px;border-radius:20px;}
+.pos-box{width:100%;background:var(--surface2);border-radius:10px;padding:8px 12px;display:flex;align-items:flex-start;gap:8px;}
+.pos-icon{font-size:12px;color:var(--muted);margin-top:1px;flex-shrink:0;}
+.pos-label{font-size:9px;color:var(--muted);display:block;margin-bottom:1px;letter-spacing:.06em;text-transform:uppercase;}
+.pos-main{font-size:12px;color:var(--text);line-height:1.4;}
+.hand-desc{font-size:11.5px;color:var(--muted);line-height:1.5;text-align:center;max-width:280px;}
+
+.judge-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:.6rem 1.25rem 1.1rem;flex-shrink:0;}
+.show-btn{grid-column:1/-1;padding:14px;background:var(--blue-bg);border:1px solid var(--blue);border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .15s;}
+.show-btn:active{transform:scale(.97);}
+.show-btn.hidden{display:none;}
+.judge-btn{padding:14px;border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--border);transition:all .15s;display:none;}
+.judge-btn:active{transform:scale(.96);}
+.judge-btn.correct{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.judge-btn.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+.judge-btn.show{display:block;}
+
+/* RESULT */
+#result{align-items:center;justify-content:center;padding:2rem 1.5rem;text-align:center;overflow-y:auto;gap:0;}
+.result-emoji{font-size:52px;margin-bottom:.75rem;line-height:1;}
+.result-pct{font-size:clamp(4rem,18vw,6.5rem);font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:.2rem;}
+.result-detail{font-size:13px;color:var(--muted);margin-bottom:.75rem;}
+.result-msg{font-size:13px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto 1.5rem;}
+.result-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:320px;}
+.action-btn{padding:14px;border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s;}
+.action-btn:active{transform:scale(.97);}
+.action-btn.primary{background:var(--blue);border-color:var(--blue);color:#0a0a0f;}
+.wrong-section{margin-top:1.5rem;width:100%;max-width:320px;text-align:left;}
+.wrong-sec-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.wrong-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.wrong-item:last-child{border-bottom:none;}
+.wi-hand{font-family:'DM Mono',monospace;font-weight:500;min-width:44px;font-size:14px;}
+.wi-rank{font-size:11px;font-weight:600;}
+.wi-pos{font-size:10px;color:var(--muted);margin-top:1px;}
+</style>
+</head>
+<body>
+
+<div id="home" class="screen active">
+  <div class="home-logo">Poker Flashcard — ヨコサワ式</div>
+  <div class="home-title">ハンドランク<br><span>クイズ</span></div>
+  <div class="home-sub">ハンドを見てランク＆参加ポジションを即答。<br>A〜Iの9ランクを反射的に言えるまで叩き込もう。</div>
+  <div class="section-label">モードを選ぶ</div>
+  <div class="all-tile" id="tile-all" onclick="selectMode('all',this)">
+    <div class="all-tile-icon">ALL</div>
+    <div>
+      <div class="at-name">全ランク（総復習）</div>
+      <div class="at-sub">A〜I すべて・44問</div>
+    </div>
+  </div>
+  <div class="rank-grid" id="rank-grid"></div>
+  <button class="start-btn" onclick="startQuiz()">スタート</button>
+</div>
+
+<div id="quiz" class="screen">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goHome()">← 戻る</button>
+    <div class="mode-label" id="mode-label">全ランク</div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="sv" id="s-rem">-</div><div class="sl">残り</div></div>
+    <div class="stat-box"><div class="sv" id="s-ok" style="color:var(--green);">0</div><div class="sl">正解</div></div>
+    <div class="stat-box"><div class="sv" id="s-ng" style="color:var(--red);">0</div><div class="sl">不正解</div></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%;"></div></div>
+  </div>
+  <div class="card-wrap">
+    <div class="flashcard" id="flashcard" onclick="reveal()">
+      <div class="card-watermark" id="watermark">A</div>
+      <div class="hand-text" id="hand-text">??</div>
+      <div class="tap-hint" id="tap-hint">タップして答えを見る</div>
+      <div class="reveal-wrap" id="reveal-wrap">
+        <div class="rank-pill" id="rank-pill"></div>
+        <div class="pos-box">
+          <div class="pos-icon">▶</div>
+          <div>
+            <span class="pos-label">参加ポジション目安</span>
+            <span class="pos-main" id="pos-main"></span>
+          </div>
+        </div>
+        <div class="hand-desc" id="hand-desc"></div>
+      </div>
+    </div>
+  </div>
+  <div class="judge-row">
+    <button class="show-btn" id="show-btn" onclick="reveal()">答えを見る</button>
+    <button class="judge-btn correct" id="btn-ok" onclick="judge(true)">正解</button>
+    <button class="judge-btn wrong"   id="btn-ng" onclick="judge(false)">間違い</button>
+  </div>
+</div>
+
+<div id="result" class="screen">
+  <div class="result-emoji" id="r-emoji">🎉</div>
+  <div class="result-pct" id="r-pct">-</div>
+  <div class="result-detail" id="r-detail"></div>
+  <div class="result-msg" id="r-msg"></div>
+  <div class="result-actions">
+    <button class="action-btn primary" onclick="restartSame()">もう一度</button>
+    <button class="action-btn" onclick="goHome()">モード選択へ</button>
+  </div>
+  <div class="wrong-section" id="wrong-section"></div>
+</div>
+
+<script>
+const RANKS = {
+  A:{ label:"Aランク", color:"#e05252", bg:"rgba(224,82,82,0.15)",   pos:"後ろに8〜9人のとき参加", short:"後ろ8〜9人" },
+  B:{ label:"Bランク", color:"#e07c3a", bg:"rgba(224,124,58,0.15)",  pos:"後ろに8〜9人のとき参加", short:"後ろ8〜9人" },
+  C:{ label:"Cランク", color:"#c9a800", bg:"rgba(201,168,0,0.15)",   pos:"後ろに8〜9人のとき参加", short:"後ろ8〜9人" },
+  D:{ label:"Dランク", color:"#52b852", bg:"rgba(82,184,82,0.15)",   pos:"後ろに6〜7人のとき参加", short:"後ろ6〜7人" },
+  E:{ label:"Eランク", color:"#4aaecc", bg:"rgba(74,174,204,0.15)",  pos:"後ろに4〜5人のとき参加", short:"後ろ4〜5人" },
+  F:{ label:"Fランク", color:"#7b9eff", bg:"rgba(123,158,255,0.15)", pos:"後ろに3人のとき参加",    short:"後ろ3人"    },
+  G:{ label:"Gランク", color:"#aaa",    bg:"rgba(170,170,170,0.12)", pos:"後ろに2人のとき参加",    short:"後ろ2人"    },
+  H:{ label:"Hランク", color:"#c084fc", bg:"rgba(192,132,252,0.15)", pos:"BTNからのレイズにコール可能", short:"BTNコール" },
+  I:{ label:"Iランク", color:"#666",    bg:"rgba(102,102,102,0.12)", pos:"基本的にフォールド",      short:"フォールド" },
+};
+
+const HANDS = [
+  {h:"AA",  red:false, r:"A", desc:"最強ペア。どのポジションからでも迷わずレイズ。"},
+  {h:"KK",  red:false, r:"A", desc:"AA以外ほぼ有利。フロップのAには注意して進める。"},
+  {h:"AKs", red:true,  r:"A", desc:"スーテッドのビッグスリック。フラッシュドロー付きで最強クラス。"},
+  {h:"QQ",  red:false, r:"A", desc:"非常に強いペア。A・Kが出たボードは慎重に。"},
+  {h:"JJ",  red:false, r:"A", desc:"強いペア。オーバーカードが3枚出ることも念頭に。"},
+  {h:"AQs", red:true,  r:"B", desc:"スーテッドのAQ。フラッシュドロー付きで非常に強い。"},
+  {h:"TT",  red:false, r:"B", desc:"強いペア。フロップのオーバーカード次第で判断を変える。"},
+  {h:"KQs", red:true,  r:"B", desc:"スーテッドのKQ。連番+同スートで非常に使いやすい。"},
+  {h:"AKo", red:false, r:"B", desc:"オフスートのビッグスリック。強いがAKsより少し落ちる。"},
+  {h:"AJs", red:true,  r:"B", desc:"スーテッドのAJ。バリューとドローを兼ねる優秀なハンド。"},
+  {h:"99",  red:false, r:"B", desc:"中位ペア。セット率12%を意識しつつポジションで判断。"},
+  {h:"KJs", red:true,  r:"B", desc:"スーテッドのKJ。連番コネクターで柔軟性が高い。"},
+  {h:"88",  red:false, r:"C", desc:"中位ペア。セット狙いがメイン。ポジション有利なときに積極的に。"},
+  {h:"ATs", red:true,  r:"C", desc:"スーテッドのAT。フラッシュドロー+トップペアを狙える。"},
+  {h:"QJs", red:true,  r:"C", desc:"スーテッドのQJ。ストレート+フラッシュドローが豊富。"},
+  {h:"AQo", red:false, r:"C", desc:"オフスートのAQ。強いがポジションと相手のレンジに注意。"},
+  {h:"KTs", red:true,  r:"C", desc:"スーテッドのKT。連番+同スートで使いやすいハンド。"},
+  {h:"JTs", red:true,  r:"C", desc:"スーテッドのJT。ドロー系の中では最強クラス。"},
+  {h:"77",  red:false, r:"C", desc:"小中ペア。セット率12%を念頭にポジション判断。"},
+  {h:"AJo", red:false, r:"D", desc:"オフスートのAJ。後ろが多いときは控えめに。"},
+  {h:"A9s", red:true,  r:"D", desc:"スーテッドのA9。ナッツフラッシュドロー+トップペア狙い。"},
+  {h:"QTs", red:true,  r:"D", desc:"スーテッドのQT。ドロー豊富で投機的に使える。"},
+  {h:"66",  red:false, r:"D", desc:"小ペア。セット率12%。安いコールができるときに参加。"},
+  {h:"KQo", red:false, r:"D", desc:"オフスートのKQ。後ろに人が多いほど控えめにプレイ。"},
+  {h:"T9s", red:true,  r:"D", desc:"スーテッドのT9。コネクター系の優秀なハンド。"},
+  {h:"A8s", red:true,  r:"D", desc:"スーテッドのA8。フラッシュドロー狙いがメイン。"},
+  {h:"55",  red:false, r:"E", desc:"小ペア。セット以外では勝ちにくい。安くコールできるときのみ。"},
+  {h:"A7s", red:true,  r:"E", desc:"スーテッドのA7。ナッツフラッシュドローが強み。"},
+  {h:"98s", red:true,  r:"E", desc:"スーテッドコネクターの代表格。ドロー豊富で柔軟。"},
+  {h:"A6s", red:true,  r:"E", desc:"スーテッドのA6。フラッシュドロー狙い。Aトップペアも作れる。"},
+  {h:"87s", red:true,  r:"E", desc:"スーテッドの87。ストレート+フラッシュドロー豊富。"},
+  {h:"44",  red:false, r:"F", desc:"小ペア。セット率12%。後ろに3人以下のときのみ参加。"},
+  {h:"A5s", red:true,  r:"F", desc:"スーテッドのA5。フラッシュ+ストレートドロー両方狙える。"},
+  {h:"76s", red:true,  r:"F", desc:"スーテッドの76。連番コネクターでドロー系のハンド。"},
+  {h:"33",  red:false, r:"G", desc:"小ペア。後ろに2人のみ参加。セット率12%を活かして安く入る。"},
+  {h:"22",  red:false, r:"G", desc:"最小ペア。セット以外で勝つのは難しい。後ろ2人のみ参加。"},
+  {h:"A4s", red:true,  r:"G", desc:"スーテッドのA4。ナッツフラッシュドロー付き。後ろ2人のみ。"},
+  {h:"A3s", red:true,  r:"G", desc:"スーテッドのA3。ナッツフラッシュドロー。後ろ2人限定で参加。"},
+  {h:"KJo", red:false, r:"H", desc:"オフスートのKJ。BTNからのレイズにのみコール可能。"},
+  {h:"QJo", red:false, r:"H", desc:"オフスートのQJ。BTNからのレイズへのコール限定。"},
+  {h:"65s", red:true,  r:"H", desc:"スーテッドの65。BTNコールのみ。ドロー狙い。"},
+  {h:"72o", red:false, r:"I", desc:"最弱ハンドの代表。基本的にフォールド一択。"},
+  {h:"83o", red:false, r:"I", desc:"ギャップ大+オフスート。フォールドが正解。"},
+  {h:"J4o", red:false, r:"I", desc:"絵札だが相方が弱くオフスート。基本フォールド。"},
+];
+
+let selectedMode = "all";
+let deck=[], idx=0, okCount=0, ngCount=0, wrongHands=[];
+let revealed = false;
+
+function buildRankGrid() {
+  const grid = document.getElementById('rank-grid');
+  grid.innerHTML = '';
+  Object.entries(RANKS).forEach(([key, r]) => {
+    const cnt = HANDS.filter(h => h.r === key).length;
+    const tile = document.createElement('div');
+    tile.className = 'rank-tile';
+    tile.dataset.mode = key;
+    tile.innerHTML = `<div class="rt-badge" style="color:${r.color};">${key}</div><div class="rt-name">${r.label}</div><div class="rt-pos" style="color:${r.color};opacity:.75;">${r.short}</div><div class="rt-cnt">${cnt}問</div>`;
+    tile.onclick = () => selectMode(key, tile);
+    grid.appendChild(tile);
+  });
+}
+
+function selectMode(mode, el) {
+  selectedMode = mode;
+  document.querySelectorAll('.rank-tile,.all-tile').forEach(t => {
+    t.style.borderColor = 'var(--border)';
+    t.style.background = '';
+  });
+  if (mode === 'all') {
+    el.style.borderColor = 'var(--blue)';
+    el.style.background = 'var(--blue-bg)';
+  } else {
+    const r = RANKS[mode];
+    el.style.borderColor = r.color;
+    el.style.background = r.bg;
+  }
+}
+
+function getDeck() {
+  const pool = selectedMode === 'all' ? HANDS : HANDS.filter(h => h.r === selectedMode);
+  return shuffle([...pool]);
+}
+
+function shuffle(arr) {
+  for (let i=arr.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function startQuiz() {
+  deck = getDeck(); idx=0; okCount=0; ngCount=0; wrongHands=[];
+  const label = selectedMode==='all' ? '全ランク' : RANKS[selectedMode].label;
+  document.getElementById('mode-label').textContent = label;
+  showScreen('quiz');
+  renderCard();
+}
+
+function renderCard() {
+  if (idx >= deck.length) { showResult(); return; }
+  revealed = false;
+  const c = deck[idx];
+  const r = RANKS[c.r];
+  const ht = document.getElementById('hand-text');
+  ht.textContent = c.h;
+  ht.className = 'hand-text' + (c.red?' red':'');
+  document.getElementById('watermark').textContent = c.h[0];
+  document.getElementById('tap-hint').style.display = 'block';
+  document.getElementById('reveal-wrap').classList.remove('show');
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('revealed');
+  fc.style.setProperty('--rc', r.color);
+  document.getElementById('show-btn').classList.remove('hidden');
+  document.getElementById('btn-ok').style.display='none';
+  document.getElementById('btn-ng').style.display='none';
+  document.getElementById('btn-ok').classList.remove('show');
+  document.getElementById('btn-ng').classList.remove('show');
+  updateStats(); updateProg();
+}
+
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+  const c = deck[idx];
+  const r = RANKS[c.r];
+  const pill = document.getElementById('rank-pill');
+  pill.textContent = r.label;
+  pill.style.background = r.bg;
+  pill.style.color = r.color;
+  document.getElementById('pos-main').textContent = r.pos;
+  document.getElementById('hand-desc').textContent = c.desc;
+  document.getElementById('reveal-wrap').classList.add('show');
+  document.getElementById('tap-hint').style.display='none';
+  const fc = document.getElementById('flashcard');
+  fc.classList.add('revealed');
+  fc.style.borderColor = r.color;
+  document.getElementById('show-btn').classList.add('hidden');
+  document.getElementById('btn-ok').style.display='block';
+  document.getElementById('btn-ng').style.display='block';
+  document.getElementById('btn-ok').classList.add('show');
+  document.getElementById('btn-ng').classList.add('show');
+}
+
+function judge(ok) {
+  if (ok) okCount++; else { ngCount++; wrongHands.push(deck[idx]); }
+  idx++; renderCard();
+}
+
+function updateStats() {
+  document.getElementById('s-rem').textContent = deck.length - idx;
+  document.getElementById('s-ok').textContent  = okCount;
+  document.getElementById('s-ng').textContent  = ngCount;
+}
+
+function updateProg() {
+  document.getElementById('prog').style.width = Math.round(idx/deck.length*100)+'%';
+}
+
+function showResult() {
+  const pct = Math.round(okCount/deck.length*100);
+  const el = document.getElementById('r-pct');
+  el.textContent = pct+'%';
+  el.style.color = pct>=90?'var(--green)':pct>=70?'#f0a45a':'var(--red)';
+  document.getElementById('r-emoji').textContent = pct>=90?'🎉':pct>=70?'👍':'💪';
+  document.getElementById('r-detail').textContent = `${deck.length}問中 ${okCount}問正解`;
+  document.getElementById('r-msg').textContent = pct>=90
+    ?'完璧！反射神経が鍛えられている証拠。次のランクへ進もう。'
+    :pct>=70?'いい感じ！間違えたハンドだけ集中的に叩き直そう。'
+    :'焦らずOK。同じランクをもう一度繰り返すのが最短ルート。';
+
+  const ws = document.getElementById('wrong-section');
+  ws.innerHTML = '';
+  if (wrongHands.length > 0) {
+    const tl = document.createElement('div');
+    tl.className='wrong-sec-label'; tl.textContent='間違えたハンド';
+    ws.appendChild(tl);
+    wrongHands.forEach(h => {
+      const r = RANKS[h.r];
+      const row = document.createElement('div');
+      row.className = 'wrong-item';
+      row.innerHTML = `<span class="wi-hand" style="color:${h.red?'var(--red)':'var(--text)'}">${h.h}</span><div><div class="wi-rank" style="color:${r.color}">${r.label}</div><div class="wi-pos">${r.short}</div></div>`;
+      ws.appendChild(row);
+    });
+  }
+  showScreen('result');
+}
+
+function restartSame() {
+  deck=getDeck(); idx=0; okCount=0; ngCount=0; wrongHands=[];
+  showScreen('quiz'); renderCard();
+}
+
+function goHome() { showScreen('home'); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+buildRankGrid();
+selectMode('all', document.getElementById('tile-all'));
+</script>
+</body>
+</html>
