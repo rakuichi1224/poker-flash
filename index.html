@@ -10,23 +10,17 @@
 <title>Poker Flashcard — ヨコサワ式</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0a0a0f;
-  --surface: #13131a;
-  --surface2: #1c1c26;
-  --border: rgba(255,255,255,0.07);
-  --text: #f0eff8;
-  --muted: rgba(240,239,248,0.42);
-  --hint: rgba(240,239,248,0.18);
-  --green: #2dd4a0; --green-bg: rgba(45,212,160,0.12);
-  --red: #f26b6b;   --red-bg: rgba(242,107,107,0.12);
-  --blue: #7b9eff;  --blue-bg: rgba(123,158,255,0.12);
+:root{
+  --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c26;
+  --border:rgba(255,255,255,0.07);--text:#f0eff8;
+  --muted:rgba(240,239,248,0.42);--hint:rgba(240,239,248,0.18);
+  --green:#2dd4a0;--green-bg:rgba(45,212,160,0.12);
+  --red:#f26b6b;--red-bg:rgba(242,107,107,0.12);
+  --blue:#7b9eff;--blue-bg:rgba(123,158,255,0.12);
 }
-
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;flex-direction:column;}
-
 .screen{display:none;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;}
 .screen.active{display:flex;}
 
@@ -37,19 +31,16 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .home-title span{color:var(--blue);}
 .home-sub{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:1.5rem;}
 .section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;margin-top:1.25rem;}
-
 .all-tile{padding:12px 14px;border-radius:12px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:6px;transition:all .15s;}
 .all-tile-icon{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;color:var(--blue);}
 .at-name{font-size:13px;font-weight:600;}
 .at-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-
 .rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:1.25rem;}
 .rank-tile{padding:10px 8px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;}
 .rt-badge{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:3px;}
 .rt-name{font-size:9px;color:var(--muted);line-height:1.3;}
 .rt-pos{font-size:8px;margin-top:2px;}
 .rt-cnt{font-size:9px;color:var(--muted);margin-top:2px;}
-
 .start-btn{width:100%;padding:16px;background:var(--blue);color:#0a0a0f;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s,transform .1s;}
 .start-btn:active{transform:scale(.97);opacity:.9;}
 
@@ -58,31 +49,20 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .quiz-header{padding:.9rem 1.25rem .6rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .back-btn{background:none;border:none;color:var(--muted);font-size:13px;font-family:'Syne',sans-serif;cursor:pointer;padding:4px 0;}
 .mode-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 1.25rem .6rem;flex-shrink:0;}
 .stat-box{background:var(--surface);border-radius:10px;padding:7px 10px;text-align:center;}
 .stat-box .sv{font-size:19px;font-weight:600;font-family:'DM Mono',monospace;}
 .stat-box .sl{font-size:9px;color:var(--muted);margin-top:1px;}
-
 .prog-wrap{padding:0 1.25rem .5rem;flex-shrink:0;}
 .prog-track{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s;}
-
 .card-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:0 1.25rem;min-height:0;}
-.flashcard{
-  width:100%;max-width:380px;
-  background:var(--surface);border:1px solid var(--border);border-radius:22px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:1.5rem 1.25rem 1.25rem;
-  cursor:pointer;transition:transform .15s,border-color .2s;
-  position:relative;overflow:hidden;user-select:none;
-}
+.flashcard{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1.25rem 1.25rem;cursor:pointer;transition:transform .15s,border-color .2s;position:relative;overflow:hidden;user-select:none;}
 .flashcard:active{transform:scale(.97);}
 .card-watermark{position:absolute;right:-8px;bottom:-18px;font-size:100px;font-weight:800;opacity:.04;font-family:'DM Mono',monospace;pointer-events:none;}
 .hand-text{font-family:'DM Mono',monospace;font-size:clamp(2.8rem,13vw,4.5rem);font-weight:500;letter-spacing:3px;line-height:1;margin-bottom:.25rem;}
 .hand-text.red{color:var(--red);}
 .tap-hint{font-size:11px;color:var(--hint);margin-top:.5rem;letter-spacing:.06em;}
-
 .reveal-wrap{width:100%;margin-top:.75rem;display:none;flex-direction:column;align-items:center;gap:.5rem;}
 .reveal-wrap.show{display:flex;}
 .rank-pill{font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 14px;border-radius:20px;}
@@ -91,7 +71,6 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .pos-label{font-size:9px;color:var(--muted);display:block;margin-bottom:1px;letter-spacing:.06em;text-transform:uppercase;}
 .pos-main{font-size:12px;color:var(--text);line-height:1.4;}
 .hand-desc{font-size:11.5px;color:var(--muted);line-height:1.5;text-align:center;max-width:280px;}
-
 .judge-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:.6rem 1.25rem 1.1rem;flex-shrink:0;}
 .show-btn{grid-column:1/-1;padding:14px;background:var(--blue-bg);border:1px solid var(--blue);border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .15s;}
 .show-btn:active{transform:scale(.97);}
@@ -126,13 +105,13 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 <div id="home" class="screen active">
   <div class="home-logo">Poker Flashcard — ヨコサワ式</div>
   <div class="home-title">ハンドランク<br><span>クイズ</span></div>
-  <div class="home-sub">ハンドを見てランク＆参加ポジションを即答。<br>A〜Iの9ランクを反射的に言えるまで叩き込もう。</div>
+  <div class="home-sub">169種類すべて収録。ヨコサワレンジ表A〜Iランク＋参加ポジションを叩き込もう。</div>
   <div class="section-label">モードを選ぶ</div>
   <div class="all-tile" id="tile-all" onclick="selectMode('all',this)">
     <div class="all-tile-icon">ALL</div>
     <div>
       <div class="at-name">全ランク（総復習）</div>
-      <div class="at-sub">A〜I すべて・44問</div>
+      <div class="at-sub">A〜I すべて・169問</div>
     </div>
   </div>
   <div class="rank-grid" id="rank-grid"></div>
@@ -190,158 +169,259 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 </div>
 
 <script>
-const RANKS = {
-  A:{ label:"Aランク", color:"#e05252", bg:"rgba(224,82,82,0.15)",   pos:"後ろに8〜9人のとき参加", short:"後ろ8〜9人" },
-  B:{ label:"Bランク", color:"#e07c3a", bg:"rgba(224,124,58,0.15)",  pos:"後ろに8〜9人のとき参加", short:"後ろ8〜9人" },
-  C:{ label:"Cランク", color:"#c9a800", bg:"rgba(201,168,0,0.15)",   pos:"後ろに8〜9人のとき参加", short:"後ろ8〜9人" },
-  D:{ label:"Dランク", color:"#52b852", bg:"rgba(82,184,82,0.15)",   pos:"後ろに6〜7人のとき参加", short:"後ろ6〜7人" },
-  E:{ label:"Eランク", color:"#4aaecc", bg:"rgba(74,174,204,0.15)",  pos:"後ろに4〜5人のとき参加", short:"後ろ4〜5人" },
-  F:{ label:"Fランク", color:"#7b9eff", bg:"rgba(123,158,255,0.15)", pos:"後ろに3人のとき参加",    short:"後ろ3人"    },
-  G:{ label:"Gランク", color:"#aaa",    bg:"rgba(170,170,170,0.12)", pos:"後ろに2人のとき参加",    short:"後ろ2人"    },
-  H:{ label:"Hランク", color:"#c084fc", bg:"rgba(192,132,252,0.15)", pos:"BTNからのレイズにコール可能", short:"BTNコール" },
-  I:{ label:"Iランク", color:"#666",    bg:"rgba(102,102,102,0.12)", pos:"基本的にフォールド",      short:"フォールド" },
+const RANKS={
+  A:{label:"Aランク",color:"#e05252",bg:"rgba(224,82,82,0.15)",   pos:"後ろに8〜9人のとき参加",short:"後ろ8〜9人"},
+  B:{label:"Bランク",color:"#e07c3a",bg:"rgba(224,124,58,0.15)",  pos:"後ろに8〜9人のとき参加",short:"後ろ8〜9人"},
+  C:{label:"Cランク",color:"#c9a800",bg:"rgba(201,168,0,0.15)",   pos:"後ろに8〜9人のとき参加",short:"後ろ8〜9人"},
+  D:{label:"Dランク",color:"#52b852",bg:"rgba(82,184,82,0.15)",   pos:"後ろに6〜7人のとき参加",short:"後ろ6〜7人"},
+  E:{label:"Eランク",color:"#4aaecc",bg:"rgba(74,174,204,0.15)",  pos:"後ろに4〜5人のとき参加",short:"後ろ4〜5人"},
+  F:{label:"Fランク",color:"#7b9eff",bg:"rgba(123,158,255,0.15)", pos:"後ろに3人のとき参加",   short:"後ろ3人"},
+  G:{label:"Gランク",color:"#aaaaaa",bg:"rgba(170,170,170,0.12)", pos:"後ろに2人のとき参加",   short:"後ろ2人"},
+  H:{label:"Hランク",color:"#c084fc",bg:"rgba(192,132,252,0.15)", pos:"BTNからのレイズにコール可能",short:"BTNコール"},
+  I:{label:"Iランク",color:"#666",   bg:"rgba(102,102,102,0.12)", pos:"基本的にフォールド",     short:"フォールド"},
 };
 
-const HANDS = [
-  {h:"AA",  red:false, r:"A", desc:"最強ペア。どのポジションからでも迷わずレイズ。"},
-  {h:"KK",  red:false, r:"A", desc:"AA以外ほぼ有利。フロップのAには注意して進める。"},
-  {h:"AKs", red:true,  r:"A", desc:"スーテッドのビッグスリック。フラッシュドロー付きで最強クラス。"},
-  {h:"QQ",  red:false, r:"A", desc:"非常に強いペア。A・Kが出たボードは慎重に。"},
-  {h:"JJ",  red:false, r:"A", desc:"強いペア。オーバーカードが3枚出ることも念頭に。"},
-  {h:"AQs", red:true,  r:"B", desc:"スーテッドのAQ。フラッシュドロー付きで非常に強い。"},
-  {h:"TT",  red:false, r:"B", desc:"強いペア。フロップのオーバーカード次第で判断を変える。"},
-  {h:"KQs", red:true,  r:"B", desc:"スーテッドのKQ。連番+同スートで非常に使いやすい。"},
-  {h:"AKo", red:false, r:"B", desc:"オフスートのビッグスリック。強いがAKsより少し落ちる。"},
-  {h:"AJs", red:true,  r:"B", desc:"スーテッドのAJ。バリューとドローを兼ねる優秀なハンド。"},
-  {h:"99",  red:false, r:"B", desc:"中位ペア。セット率12%を意識しつつポジションで判断。"},
-  {h:"KJs", red:true,  r:"B", desc:"スーテッドのKJ。連番コネクターで柔軟性が高い。"},
-  {h:"88",  red:false, r:"C", desc:"中位ペア。セット狙いがメイン。ポジション有利なときに積極的に。"},
-  {h:"ATs", red:true,  r:"C", desc:"スーテッドのAT。フラッシュドロー+トップペアを狙える。"},
-  {h:"QJs", red:true,  r:"C", desc:"スーテッドのQJ。ストレート+フラッシュドローが豊富。"},
-  {h:"AQo", red:false, r:"C", desc:"オフスートのAQ。強いがポジションと相手のレンジに注意。"},
-  {h:"KTs", red:true,  r:"C", desc:"スーテッドのKT。連番+同スートで使いやすいハンド。"},
-  {h:"JTs", red:true,  r:"C", desc:"スーテッドのJT。ドロー系の中では最強クラス。"},
-  {h:"77",  red:false, r:"C", desc:"小中ペア。セット率12%を念頭にポジション判断。"},
-  {h:"AJo", red:false, r:"D", desc:"オフスートのAJ。後ろが多いときは控えめに。"},
-  {h:"A9s", red:true,  r:"D", desc:"スーテッドのA9。ナッツフラッシュドロー+トップペア狙い。"},
-  {h:"QTs", red:true,  r:"D", desc:"スーテッドのQT。ドロー豊富で投機的に使える。"},
-  {h:"66",  red:false, r:"D", desc:"小ペア。セット率12%。安いコールができるときに参加。"},
-  {h:"KQo", red:false, r:"D", desc:"オフスートのKQ。後ろに人が多いほど控えめにプレイ。"},
-  {h:"T9s", red:true,  r:"D", desc:"スーテッドのT9。コネクター系の優秀なハンド。"},
-  {h:"A8s", red:true,  r:"D", desc:"スーテッドのA8。フラッシュドロー狙いがメイン。"},
-  {h:"55",  red:false, r:"E", desc:"小ペア。セット以外では勝ちにくい。安くコールできるときのみ。"},
-  {h:"A7s", red:true,  r:"E", desc:"スーテッドのA7。ナッツフラッシュドローが強み。"},
-  {h:"98s", red:true,  r:"E", desc:"スーテッドコネクターの代表格。ドロー豊富で柔軟。"},
-  {h:"A6s", red:true,  r:"E", desc:"スーテッドのA6。フラッシュドロー狙い。Aトップペアも作れる。"},
-  {h:"87s", red:true,  r:"E", desc:"スーテッドの87。ストレート+フラッシュドロー豊富。"},
-  {h:"44",  red:false, r:"F", desc:"小ペア。セット率12%。後ろに3人以下のときのみ参加。"},
-  {h:"A5s", red:true,  r:"F", desc:"スーテッドのA5。フラッシュ+ストレートドロー両方狙える。"},
-  {h:"76s", red:true,  r:"F", desc:"スーテッドの76。連番コネクターでドロー系のハンド。"},
-  {h:"33",  red:false, r:"G", desc:"小ペア。後ろに2人のみ参加。セット率12%を活かして安く入る。"},
-  {h:"22",  red:false, r:"G", desc:"最小ペア。セット以外で勝つのは難しい。後ろ2人のみ参加。"},
-  {h:"A4s", red:true,  r:"G", desc:"スーテッドのA4。ナッツフラッシュドロー付き。後ろ2人のみ。"},
-  {h:"A3s", red:true,  r:"G", desc:"スーテッドのA3。ナッツフラッシュドロー。後ろ2人限定で参加。"},
-  {h:"KJo", red:false, r:"H", desc:"オフスートのKJ。BTNからのレイズにのみコール可能。"},
-  {h:"QJo", red:false, r:"H", desc:"オフスートのQJ。BTNからのレイズへのコール限定。"},
-  {h:"65s", red:true,  r:"H", desc:"スーテッドの65。BTNコールのみ。ドロー狙い。"},
-  {h:"72o", red:false, r:"I", desc:"最弱ハンドの代表。基本的にフォールド一択。"},
-  {h:"83o", red:false, r:"I", desc:"ギャップ大+オフスート。フォールドが正解。"},
-  {h:"J4o", red:false, r:"I", desc:"絵札だが相方が弱くオフスート。基本フォールド。"},
+// ヨコサワレンジ表 完全169ハンド
+// 表の構造:
+// 対角線=ポケットペア, 右上=スーテッド(s), 左下=オフスート(o)
+// ランク順: A K Q J T 9 8 7 6 5 4 3 2
+const HANDS=[
+  // ── Aランク (5手) ──
+  {h:"AA", red:false,r:"A",desc:"最強ペア。どのポジションからでも迷わずレイズ。"},
+  {h:"KK", red:false,r:"A",desc:"AA以外ほぼ有利。フロップのAには注意。"},
+  {h:"QQ", red:false,r:"A",desc:"非常に強いペア。A・Kが出たボードは慎重に。"},
+  {h:"JJ", red:false,r:"A",desc:"強いペア。オーバーカードが出やすいので注意。"},
+  {h:"AKs",red:true, r:"A",desc:"スーテッドのビッグスリック。最強クラスのハンド。"},
+
+  // ── Bランク (8手) ──
+  {h:"TT", red:false,r:"B",desc:"強いペア。フロップのオーバーカード次第で判断を変える。"},
+  {h:"99", red:false,r:"B",desc:"中位ペア。セット率12%を意識しつつポジションで判断。"},
+  {h:"AQs",red:true, r:"B",desc:"スーテッドのAQ。フラッシュドロー付きで非常に強い。"},
+  {h:"AJs",red:true, r:"B",desc:"スーテッドのAJ。バリューとドローを兼ねる優秀なハンド。"},
+  {h:"AKo",red:false,r:"B",desc:"オフスートのビッグスリック。強いがAKsより少し落ちる。"},
+  {h:"KQs",red:true, r:"B",desc:"スーテッドのKQ。連番+同スートで非常に使いやすい。"},
+  {h:"KJs",red:true, r:"B",desc:"スーテッドのKJ。連番コネクターで柔軟性が高い。"},
+  {h:"QJs",red:true, r:"B",desc:"スーテッドのQJ。ストレート+フラッシュドローが豊富。"},
+
+  // ── Cランク (7手) ──
+  {h:"88", red:false,r:"C",desc:"中位ペア。セット狙いがメイン。ポジション有利なときに積極的に。"},
+  {h:"77", red:false,r:"C",desc:"小中ペア。セット率12%を念頭にポジション判断。"},
+  {h:"ATs",red:true, r:"C",desc:"スーテッドのAT。フラッシュドロー+トップペアを狙える。"},
+  {h:"AQo",red:false,r:"C",desc:"オフスートのAQ。強いがポジションと相手のレンジに注意。"},
+  {h:"KTs",red:true, r:"C",desc:"スーテッドのKT。連番+同スートで使いやすいハンド。"},
+  {h:"QTs",red:true, r:"C",desc:"スーテッドのQT。ドロー豊富で投機的に使える。"},
+  {h:"JTs",red:true, r:"C",desc:"スーテッドのJT。ドロー系の中では最強クラス。"},
+
+  // ── Dランク (16手) ──
+  {h:"66", red:false,r:"D",desc:"小ペア。セット率12%。安いコールができるときに参加。"},
+  {h:"A9s",red:true, r:"D",desc:"スーテッドのA9。ナッツフラッシュドロー+トップペア狙い。"},
+  {h:"A8s",red:true, r:"D",desc:"スーテッドのA8。フラッシュドロー狙いがメイン。"},
+  {h:"A7s",red:true, r:"D",desc:"スーテッドのA7。ナッツフラッシュドローが強み。"},
+  {h:"A6s",red:true, r:"D",desc:"スーテッドのA6。フラッシュドロー+Aトップペアを狙う。"},
+  {h:"A5s",red:true, r:"D",desc:"スーテッドのA5。フラッシュ+ストレートドロー両方狙える。"},
+  {h:"A4s",red:true, r:"D",desc:"スーテッドのA4。ナッツフラッシュドロー付き。"},
+  {h:"A3s",red:true, r:"D",desc:"スーテッドのA3。ナッツフラッシュドロー。"},
+  {h:"A2s",red:true, r:"D",desc:"スーテッドのA2。ナッツフラッシュドロー狙い。"},
+  {h:"AJo",red:false,r:"D",desc:"オフスートのAJ。後ろが多いときは控えめに。"},
+  {h:"KQo",red:false,r:"D",desc:"オフスートのKQ。後ろに人が多いほど控えめにプレイ。"},
+  {h:"K9s",red:true, r:"D",desc:"スーテッドのK9。フラッシュドロー+強いキッカー。"},
+  {h:"K8s",red:true, r:"D",desc:"スーテッドのK8。フラッシュドロー狙い。"},
+  {h:"T9s",red:true, r:"D",desc:"スーテッドのT9。コネクター系の優秀なハンド。"},
+  {h:"98s",red:true, r:"D",desc:"スーテッドコネクターの代表格。ドロー豊富で柔軟。"},
+  {h:"87s",red:true, r:"D",desc:"スーテッドの87。ストレート+フラッシュドロー豊富。"},
+
+  // ── Eランク (11手) ──
+  {h:"55", red:false,r:"E",desc:"小ペア。セット以外では勝ちにくい。安くコールできるときのみ。"},
+  {h:"Q9s",red:true, r:"E",desc:"スーテッドのQ9。フラッシュドロー+中位ペア狙い。"},
+  {h:"J9s",red:true, r:"E",desc:"スーテッドのJ9。ドロー豊富なコネクター系。"},
+  {h:"T8s",red:true, r:"E",desc:"スーテッドのT8。1ギャップだがドローが豊富。"},
+  {h:"97s",red:true, r:"E",desc:"スーテッドの97。ストレートドローがメイン。"},
+  {h:"86s",red:true, r:"E",desc:"スーテッドの86。ストレートドロー系のハンド。"},
+  {h:"76s",red:true, r:"E",desc:"スーテッドの76。連番コネクターでドロー系のハンド。"},
+  {h:"65s",red:true, r:"E",desc:"スーテッドの65。ストレート+フラッシュドロー狙い。"},
+  {h:"ATo",red:false,r:"E",desc:"オフスートのAT。後ろ4〜5人のときのみ参加。"},
+  {h:"KJo",red:false,r:"E",desc:"オフスートのKJ。後ろ4〜5人のときのみ参加。"},
+  {h:"QJo",red:false,r:"E",desc:"オフスートのQJ。後ろ4〜5人のときのみ参加。"},
+
+  // ── Fランク (23手) ──
+  {h:"44", red:false,r:"F",desc:"小ペア。セット率12%。後ろに3人以下のときのみ参加。"},
+  {h:"K7s",red:true, r:"F",desc:"スーテッドのK7。フラッシュドロー狙い。後ろ3人限定。"},
+  {h:"K6s",red:true, r:"F",desc:"スーテッドのK6。フラッシュドロー狙い。後ろ3人限定。"},
+  {h:"K5s",red:true, r:"F",desc:"スーテッドのK5。フラッシュドロー狙い。後ろ3人限定。"},
+  {h:"Q8s",red:true, r:"F",desc:"スーテッドのQ8。フラッシュドロー+中位ペア狙い。"},
+  {h:"Q7s",red:true, r:"F",desc:"スーテッドのQ7。フラッシュドロー狙い。後ろ3人限定。"},
+  {h:"J8s",red:true, r:"F",desc:"スーテッドのJ8。ストレート+フラッシュドロー狙い。"},
+  {h:"J7s",red:true, r:"F",desc:"スーテッドのJ7。フラッシュドロー狙い。後ろ3人限定。"},
+  {h:"T7s",red:true, r:"F",desc:"スーテッドのT7。ストレートドロー+フラッシュドロー。"},
+  {h:"96s",red:true, r:"F",desc:"スーテッドの96。ストレートドロー系。後ろ3人限定。"},
+  {h:"95s",red:true, r:"F",desc:"スーテッドの95。ストレートドロー系。後ろ3人限定。"},
+  {h:"85s",red:true, r:"F",desc:"スーテッドの85。ストレートドロー狙い。後ろ3人限定。"},
+  {h:"75s",red:true, r:"F",desc:"スーテッドの75。ストレートドロー系。後ろ3人限定。"},
+  {h:"74s",red:true, r:"F",desc:"スーテッドの74。ストレートドロー狙い。後ろ3人限定。"},
+  {h:"64s",red:true, r:"F",desc:"スーテッドの64。ストレートドロー狙い。後ろ3人限定。"},
+  {h:"54s",red:true, r:"F",desc:"スーテッドの54。ストレート+フラッシュドロー狙い。"},
+  {h:"53s",red:true, r:"F",desc:"スーテッドの53。ストレートドロー狙い。後ろ3人限定。"},
+  {h:"KTo",red:false,r:"F",desc:"オフスートのKT。後ろ3人のときのみ参加。"},
+  {h:"QTo",red:false,r:"F",desc:"オフスートのQT。後ろ3人のときのみ参加。"},
+  {h:"JTo",red:false,r:"F",desc:"オフスートのJT。後ろ3人のときのみ参加。"},
+  {h:"J9o",red:false,r:"F",desc:"オフスートのJ9。後ろ3人のときのみ参加。"},
+  {h:"T9o",red:false,r:"F",desc:"オフスートのT9。後ろ3人のときのみ参加。"},
+  {h:"98o",red:false,r:"F",desc:"オフスートの98。後ろ3人のときのみ参加。"},
+
+  // ── Gランク (13手) ──
+  {h:"33", red:false,r:"G",desc:"小ペア。後ろに2人のみ参加。セット率12%を活かして安く入る。"},
+  {h:"22", red:false,r:"G",desc:"最小ペア。セット以外で勝つのは難しい。後ろ2人のみ参加。"},
+  {h:"K4s",red:true, r:"G",desc:"スーテッドのK4。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"K3s",red:true, r:"G",desc:"スーテッドのK3。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"K2s",red:true, r:"G",desc:"スーテッドのK2。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"Q6s",red:true, r:"G",desc:"スーテッドのQ6。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"Q5s",red:true, r:"G",desc:"スーテッドのQ5。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"Q4s",red:true, r:"G",desc:"スーテッドのQ4。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"J6s",red:true, r:"G",desc:"スーテッドのJ6。フラッシュドロー狙い。後ろ2人限定。"},
+  {h:"63s",red:true, r:"G",desc:"スーテッドの63。ストレートドロー狙い。後ろ2人限定。"},
+  {h:"52s",red:true, r:"G",desc:"スーテッドの52。ストレートドロー狙い。後ろ2人限定。"},
+  {h:"43s",red:true, r:"G",desc:"スーテッドの43。ストレートドロー狙い。後ろ2人限定。"},
+  {h:"42s",red:true, r:"G",desc:"スーテッドの42。ストレートドロー狙い。後ろ2人限定。"},
+
+  // ── Hランク (28手) ──
+  {h:"A9o",red:false,r:"H",desc:"オフスートのA9。BTNからのレイズにコール可能。"},
+  {h:"A8o",red:false,r:"H",desc:"オフスートのA8。BTNからのレイズにコール可能。"},
+  {h:"A7o",red:false,r:"H",desc:"オフスートのA7。BTNからのレイズにコール可能。"},
+  {h:"A6o",red:false,r:"H",desc:"オフスートのA6。BTNからのレイズにコール可能。"},
+  {h:"A5o",red:false,r:"H",desc:"オフスートのA5。BTNからのレイズにコール可能。"},
+  {h:"A4o",red:false,r:"H",desc:"オフスートのA4。BTNからのレイズにコール可能。"},
+  {h:"A3o",red:false,r:"H",desc:"オフスートのA3。BTNからのレイズにコール可能。"},
+  {h:"A2o",red:false,r:"H",desc:"オフスートのA2。BTNからのレイズにコール可能。"},
+  {h:"K9o",red:false,r:"H",desc:"オフスートのK9。BTNからのレイズにコール可能。"},
+  {h:"K8o",red:false,r:"H",desc:"オフスートのK8。BTNからのレイズにコール可能。"},
+  {h:"K7o",red:false,r:"H",desc:"オフスートのK7。BTNからのレイズにコール可能。"},
+  {h:"K6o",red:false,r:"H",desc:"オフスートのK6。BTNからのレイズにコール可能。"},
+  {h:"Q9o",red:false,r:"H",desc:"オフスートのQ9。BTNからのレイズにコール可能。"},
+  {h:"Q8o",red:false,r:"H",desc:"オフスートのQ8。BTNからのレイズにコール可能。"},
+  {h:"J8o",red:false,r:"H",desc:"オフスートのJ8。BTNからのレイズにコール可能。"},
+  {h:"T8o",red:false,r:"H",desc:"オフスートのT8。BTNからのレイズにコール可能。"},
+  {h:"97o",red:false,r:"H",desc:"オフスートの97。BTNからのレイズにコール可能。"},
+  {h:"87o",red:false,r:"H",desc:"オフスートの87。BTNからのレイズにコール可能。"},
+  {h:"76o",red:false,r:"H",desc:"オフスートの76。BTNからのレイズにコール可能。"},
+  {h:"Q3s",red:true, r:"H",desc:"スーテッドのQ3。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"Q2s",red:true, r:"H",desc:"スーテッドのQ2。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"J5s",red:true, r:"H",desc:"スーテッドのJ5。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"J4s",red:true, r:"H",desc:"スーテッドのJ4。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"J3s",red:true, r:"H",desc:"スーテッドのJ3。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"J2s",red:true, r:"H",desc:"スーテッドのJ2。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"T6s",red:true, r:"H",desc:"スーテッドのT6。フラッシュ+ストレートドロー。BTNコールのみ。"},
+  {h:"T5s",red:true, r:"H",desc:"スーテッドのT5。フラッシュドロー狙い。BTNコールのみ。"},
+  {h:"T4s",red:true, r:"H",desc:"スーテッドのT4。フラッシュドロー狙い。BTNコールのみ。"},
+
+  // ── Iランク (残り全て・代表例) ──
+  {h:"72o",red:false,r:"I",desc:"最弱ハンドの代表。ポーカーで有名な捨てハンド。フォールド。"},
+  {h:"83o",red:false,r:"I",desc:"ギャップ大+オフスート。フォールドが正解。"},
+  {h:"94o",red:false,r:"I",desc:"数字も中途半端でオフスート。フォールド。"},
+  {h:"T2o",red:false,r:"I",desc:"数字は中程度だがギャップ大・オフスート。フォールド。"},
+  {h:"J4o",red:false,r:"I",desc:"絵札だが相方が弱くオフスート。フォールド。"},
+  {h:"Q3o",red:false,r:"I",desc:"絵札でも相方が弱すぎ。フォールド。"},
+  {h:"K2o",red:false,r:"I",desc:"Kがあっても相方が弱すぎる。フォールド。"},
+  {h:"J6o",red:false,r:"I",desc:"ギャップ大+オフスート。フォールド。"},
+  {h:"T3o",red:false,r:"I",desc:"数字も組み合わせも弱い。フォールド。"},
+  {h:"93o",red:false,r:"I",desc:"中途半端な組み合わせ。フォールド。"},
+  {h:"85o",red:false,r:"I",desc:"ギャップあり+オフスート。フォールド。"},
+  {h:"64o",red:false,r:"I",desc:"コネクターでもオフスートなら弱い。フォールド。"},
+  {h:"32o",red:false,r:"I",desc:"最弱クラスの組み合わせ。フォールド一択。"},
+  {h:"T2s",red:true, r:"I",desc:"スーテッドでもギャップが大きすぎる。基本フォールド。"},
+  {h:"93s",red:true, r:"I",desc:"スーテッドでも組み合わせが弱い。フォールド。"},
+  {h:"84s",red:true, r:"I",desc:"スーテッドの84。ストレートドローも弱い。フォールド。"},
+  {h:"73s",red:true, r:"I",desc:"スーテッドの73。ギャップが大きい。フォールド。"},
+  {h:"62s",red:true, r:"I",desc:"スーテッドの62。ギャップ大。基本フォールド。"},
 ];
 
-let selectedMode = "all";
-let deck=[], idx=0, okCount=0, ngCount=0, wrongHands=[];
-let revealed = false;
+let selectedMode="all",deck=[],idx=0,okCount=0,ngCount=0,wrongHands=[],revealed=false;
 
-function buildRankGrid() {
-  const grid = document.getElementById('rank-grid');
-  grid.innerHTML = '';
-  Object.entries(RANKS).forEach(([key, r]) => {
-    const cnt = HANDS.filter(h => h.r === key).length;
-    const tile = document.createElement('div');
-    tile.className = 'rank-tile';
-    tile.dataset.mode = key;
-    tile.innerHTML = `<div class="rt-badge" style="color:${r.color};">${key}</div><div class="rt-name">${r.label}</div><div class="rt-pos" style="color:${r.color};opacity:.75;">${r.short}</div><div class="rt-cnt">${cnt}問</div>`;
-    tile.onclick = () => selectMode(key, tile);
+function buildRankGrid(){
+  const grid=document.getElementById('rank-grid');
+  grid.innerHTML='';
+  Object.entries(RANKS).forEach(([key,r])=>{
+    const cnt=HANDS.filter(h=>h.r===key).length;
+    const tile=document.createElement('div');
+    tile.className='rank-tile';
+    tile.dataset.mode=key;
+    tile.innerHTML=`<div class="rt-badge" style="color:${r.color};">${key}</div><div class="rt-name">${r.label}</div><div class="rt-pos" style="color:${r.color};opacity:.75;">${r.short}</div><div class="rt-cnt">${cnt}問</div>`;
+    tile.onclick=()=>selectMode(key,tile);
     grid.appendChild(tile);
   });
 }
 
-function selectMode(mode, el) {
-  selectedMode = mode;
-  document.querySelectorAll('.rank-tile,.all-tile').forEach(t => {
-    t.style.borderColor = 'var(--border)';
-    t.style.background = '';
+function selectMode(mode,el){
+  selectedMode=mode;
+  document.querySelectorAll('.rank-tile,.all-tile').forEach(t=>{
+    t.style.borderColor='var(--border)';
+    t.style.background='';
   });
-  if (mode === 'all') {
-    el.style.borderColor = 'var(--blue)';
-    el.style.background = 'var(--blue-bg)';
-  } else {
-    const r = RANKS[mode];
-    el.style.borderColor = r.color;
-    el.style.background = r.bg;
+  if(mode==='all'){
+    el.style.borderColor='var(--blue)';
+    el.style.background='var(--blue-bg)';
+  }else{
+    const r=RANKS[mode];
+    el.style.borderColor=r.color;
+    el.style.background=r.bg;
   }
 }
 
-function getDeck() {
-  const pool = selectedMode === 'all' ? HANDS : HANDS.filter(h => h.r === selectedMode);
+function getDeck(){
+  const pool=selectedMode==='all'?HANDS:HANDS.filter(h=>h.r===selectedMode);
   return shuffle([...pool]);
 }
 
-function shuffle(arr) {
-  for (let i=arr.length-1;i>0;i--) {
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [arr[i],arr[j]]=[arr[j],arr[i]];
   }
   return arr;
 }
 
-function startQuiz() {
-  deck = getDeck(); idx=0; okCount=0; ngCount=0; wrongHands=[];
-  const label = selectedMode==='all' ? '全ランク' : RANKS[selectedMode].label;
-  document.getElementById('mode-label').textContent = label;
-  showScreen('quiz');
-  renderCard();
+function startQuiz(){
+  deck=getDeck();idx=0;okCount=0;ngCount=0;wrongHands=[];
+  const label=selectedMode==='all'?'全ランク':RANKS[selectedMode].label;
+  document.getElementById('mode-label').textContent=label;
+  showScreen('quiz');renderCard();
 }
 
-function renderCard() {
-  if (idx >= deck.length) { showResult(); return; }
-  revealed = false;
-  const c = deck[idx];
-  const r = RANKS[c.r];
-  const ht = document.getElementById('hand-text');
-  ht.textContent = c.h;
-  ht.className = 'hand-text' + (c.red?' red':'');
-  document.getElementById('watermark').textContent = c.h[0];
-  document.getElementById('tap-hint').style.display = 'block';
+function renderCard(){
+  if(idx>=deck.length){showResult();return;}
+  revealed=false;
+  const c=deck[idx],r=RANKS[c.r];
+  const ht=document.getElementById('hand-text');
+  ht.textContent=c.h;
+  ht.className='hand-text'+(c.red?' red':'');
+  document.getElementById('watermark').textContent=c.h[0];
+  document.getElementById('tap-hint').style.display='block';
   document.getElementById('reveal-wrap').classList.remove('show');
-  const fc = document.getElementById('flashcard');
+  const fc=document.getElementById('flashcard');
   fc.classList.remove('revealed');
-  fc.style.setProperty('--rc', r.color);
+  fc.style.borderColor='var(--border)';
   document.getElementById('show-btn').classList.remove('hidden');
   document.getElementById('btn-ok').style.display='none';
   document.getElementById('btn-ng').style.display='none';
   document.getElementById('btn-ok').classList.remove('show');
   document.getElementById('btn-ng').classList.remove('show');
-  updateStats(); updateProg();
+  updateStats();updateProg();
 }
 
-function reveal() {
-  if (revealed) return;
-  revealed = true;
-  const c = deck[idx];
-  const r = RANKS[c.r];
-  const pill = document.getElementById('rank-pill');
-  pill.textContent = r.label;
-  pill.style.background = r.bg;
-  pill.style.color = r.color;
-  document.getElementById('pos-main').textContent = r.pos;
-  document.getElementById('hand-desc').textContent = c.desc;
+function reveal(){
+  if(revealed)return;
+  revealed=true;
+  const c=deck[idx],r=RANKS[c.r];
+  const pill=document.getElementById('rank-pill');
+  pill.textContent=r.label;
+  pill.style.background=r.bg;
+  pill.style.color=r.color;
+  document.getElementById('pos-main').textContent=r.pos;
+  document.getElementById('hand-desc').textContent=c.desc;
   document.getElementById('reveal-wrap').classList.add('show');
   document.getElementById('tap-hint').style.display='none';
-  const fc = document.getElementById('flashcard');
+  const fc=document.getElementById('flashcard');
   fc.classList.add('revealed');
-  fc.style.borderColor = r.color;
+  fc.style.borderColor=r.color;
   document.getElementById('show-btn').classList.add('hidden');
   document.getElementById('btn-ok').style.display='block';
   document.getElementById('btn-ng').style.display='block';
@@ -349,64 +429,63 @@ function reveal() {
   document.getElementById('btn-ng').classList.add('show');
 }
 
-function judge(ok) {
-  if (ok) okCount++; else { ngCount++; wrongHands.push(deck[idx]); }
-  idx++; renderCard();
+function judge(ok){
+  if(ok)okCount++;else{ngCount++;wrongHands.push(deck[idx]);}
+  idx++;renderCard();
 }
 
-function updateStats() {
-  document.getElementById('s-rem').textContent = deck.length - idx;
-  document.getElementById('s-ok').textContent  = okCount;
-  document.getElementById('s-ng').textContent  = ngCount;
+function updateStats(){
+  document.getElementById('s-rem').textContent=deck.length-idx;
+  document.getElementById('s-ok').textContent=okCount;
+  document.getElementById('s-ng').textContent=ngCount;
 }
 
-function updateProg() {
-  document.getElementById('prog').style.width = Math.round(idx/deck.length*100)+'%';
+function updateProg(){
+  document.getElementById('prog').style.width=Math.round(idx/deck.length*100)+'%';
 }
 
-function showResult() {
-  const pct = Math.round(okCount/deck.length*100);
-  const el = document.getElementById('r-pct');
-  el.textContent = pct+'%';
-  el.style.color = pct>=90?'var(--green)':pct>=70?'#f0a45a':'var(--red)';
-  document.getElementById('r-emoji').textContent = pct>=90?'🎉':pct>=70?'👍':'💪';
-  document.getElementById('r-detail').textContent = `${deck.length}問中 ${okCount}問正解`;
-  document.getElementById('r-msg').textContent = pct>=90
+function showResult(){
+  const pct=Math.round(okCount/deck.length*100);
+  const el=document.getElementById('r-pct');
+  el.textContent=pct+'%';
+  el.style.color=pct>=90?'var(--green)':pct>=70?'#f0a45a':'var(--red)';
+  document.getElementById('r-emoji').textContent=pct>=90?'🎉':pct>=70?'👍':'💪';
+  document.getElementById('r-detail').textContent=`${deck.length}問中 ${okCount}問正解`;
+  document.getElementById('r-msg').textContent=pct>=90
     ?'完璧！反射神経が鍛えられている証拠。次のランクへ進もう。'
     :pct>=70?'いい感じ！間違えたハンドだけ集中的に叩き直そう。'
     :'焦らずOK。同じランクをもう一度繰り返すのが最短ルート。';
-
-  const ws = document.getElementById('wrong-section');
-  ws.innerHTML = '';
-  if (wrongHands.length > 0) {
-    const tl = document.createElement('div');
-    tl.className='wrong-sec-label'; tl.textContent='間違えたハンド';
+  const ws=document.getElementById('wrong-section');
+  ws.innerHTML='';
+  if(wrongHands.length>0){
+    const tl=document.createElement('div');
+    tl.className='wrong-sec-label';tl.textContent='間違えたハンド';
     ws.appendChild(tl);
-    wrongHands.forEach(h => {
-      const r = RANKS[h.r];
-      const row = document.createElement('div');
-      row.className = 'wrong-item';
-      row.innerHTML = `<span class="wi-hand" style="color:${h.red?'var(--red)':'var(--text)'}">${h.h}</span><div><div class="wi-rank" style="color:${r.color}">${r.label}</div><div class="wi-pos">${r.short}</div></div>`;
+    wrongHands.forEach(h=>{
+      const r=RANKS[h.r];
+      const row=document.createElement('div');
+      row.className='wrong-item';
+      row.innerHTML=`<span class="wi-hand" style="color:${h.red?'var(--red)':'var(--text)'}">${h.h}</span><div><div class="wi-rank" style="color:${r.color}">${r.label}</div><div class="wi-pos">${r.short}</div></div>`;
       ws.appendChild(row);
     });
   }
   showScreen('result');
 }
 
-function restartSame() {
-  deck=getDeck(); idx=0; okCount=0; ngCount=0; wrongHands=[];
-  showScreen('quiz'); renderCard();
+function restartSame(){
+  deck=getDeck();idx=0;okCount=0;ngCount=0;wrongHands=[];
+  showScreen('quiz');renderCard();
 }
 
-function goHome() { showScreen('home'); }
+function goHome(){showScreen('home');}
 
-function showScreen(id) {
+function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
 buildRankGrid();
-selectMode('all', document.getElementById('tile-all'));
+selectMode('all',document.getElementById('tile-all'));
 </script>
 </body>
 </html>
