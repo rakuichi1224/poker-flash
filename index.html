@@ -17,6 +17,8 @@
   --green:#2dd4a0;--green-bg:rgba(45,212,160,0.12);
   --red:#f26b6b;--red-bg:rgba(242,107,107,0.12);
   --blue:#7b9eff;--blue-bg:rgba(123,158,255,0.12);
+  --amber:#f0a45a;--amber-bg:rgba(240,164,90,0.12);
+  --purple:#c084fc;--purple-bg:rgba(192,132,252,0.12);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
@@ -25,57 +27,79 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .screen.active{display:flex;}
 
 /* HOME */
-#home{overflow-y:auto;padding:1.75rem 1.25rem 2rem;}
-.home-logo{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:1.25rem;}
-.home-title{font-size:clamp(1.7rem,7vw,2.6rem);font-weight:800;line-height:1.1;margin-bottom:.4rem;}
+#home{overflow-y:auto;padding:1.5rem 1.25rem 2rem;}
+.home-logo{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem;}
+.home-title{font-size:clamp(1.6rem,6.5vw,2.4rem);font-weight:800;line-height:1.1;margin-bottom:.4rem;}
 .home-title span{color:var(--blue);}
-.home-sub{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:1.5rem;}
-.section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;margin-top:1.25rem;}
-.all-tile{padding:12px 14px;border-radius:12px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:6px;transition:all .15s;}
-.all-tile-icon{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;color:var(--blue);}
-.at-name{font-size:13px;font-weight:600;}
-.at-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.home-sub{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;}
+.sec-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;margin-top:1.25rem;}
+
+/* mode cards */
+.mode-card{padding:12px 14px;border-radius:12px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:6px;transition:all .15s;}
+.mode-icon{font-size:18px;font-weight:800;font-family:'DM Mono',monospace;width:36px;text-align:center;flex-shrink:0;}
+.mode-info .mn{font-size:13px;font-weight:600;}
+.mode-info .ms{font-size:11px;color:var(--muted);margin-top:1px;}
+
 .rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:1.25rem;}
 .rank-tile{padding:10px 8px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;}
-.rt-badge{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:3px;}
-.rt-name{font-size:9px;color:var(--muted);line-height:1.3;}
+.rt-badge{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:2px;}
+.rt-name{font-size:9px;color:var(--muted);}
 .rt-pos{font-size:8px;margin-top:2px;}
 .rt-cnt{font-size:9px;color:var(--muted);margin-top:2px;}
-.start-btn{width:100%;padding:16px;background:var(--blue);color:#0a0a0f;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s,transform .1s;}
+
+.start-btn{width:100%;padding:15px;background:var(--blue);color:#0a0a0f;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:14px;cursor:pointer;transition:opacity .15s,transform .1s;margin-top:.5rem;}
 .start-btn:active{transform:scale(.97);opacity:.9;}
+
+/* stats panel */
+.stats-panel{background:var(--surface);border-radius:12px;padding:10px 14px;margin-bottom:1rem;}
+.sp-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sp-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.sp-box{text-align:center;}
+.sp-val{font-size:16px;font-weight:600;font-family:'DM Mono',monospace;}
+.sp-lbl{font-size:9px;color:var(--muted);margin-top:1px;}
 
 /* QUIZ */
 #quiz{padding:0;}
-.quiz-header{padding:.9rem 1.25rem .6rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.quiz-header{padding:.85rem 1.25rem .5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .back-btn{background:none;border:none;color:var(--muted);font-size:13px;font-family:'Syne',sans-serif;cursor:pointer;padding:4px 0;}
 .mode-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 1.25rem .6rem;flex-shrink:0;}
-.stat-box{background:var(--surface);border-radius:10px;padding:7px 10px;text-align:center;}
-.stat-box .sv{font-size:19px;font-weight:600;font-family:'DM Mono',monospace;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:0 1.25rem .5rem;flex-shrink:0;}
+.stat-box{background:var(--surface);border-radius:9px;padding:6px 8px;text-align:center;}
+.stat-box .sv{font-size:17px;font-weight:600;font-family:'DM Mono',monospace;}
 .stat-box .sl{font-size:9px;color:var(--muted);margin-top:1px;}
-.prog-wrap{padding:0 1.25rem .5rem;flex-shrink:0;}
+.prog-wrap{padding:0 1.25rem .4rem;flex-shrink:0;}
 .prog-track{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;}
 .prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s;}
+
+/* streak badge */
+.streak-wrap{padding:0 1.25rem .3rem;flex-shrink:0;display:flex;gap:6px;align-items:center;}
+.streak-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.mix-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--amber-bg);color:var(--amber);border:1px solid rgba(240,164,90,0.3);}
+
 .card-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:0 1.25rem;min-height:0;}
-.flashcard{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1.25rem 1.25rem;cursor:pointer;transition:transform .15s,border-color .2s;position:relative;overflow:hidden;user-select:none;}
+.flashcard{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem 1.25rem 1rem;cursor:pointer;transition:transform .15s,border-color .2s;position:relative;overflow:hidden;user-select:none;}
 .flashcard:active{transform:scale(.97);}
 .card-watermark{position:absolute;right:-8px;bottom:-18px;font-size:100px;font-weight:800;opacity:.04;font-family:'DM Mono',monospace;pointer-events:none;}
-.hand-text{font-family:'DM Mono',monospace;font-size:clamp(2.8rem,13vw,4.5rem);font-weight:500;letter-spacing:3px;line-height:1;margin-bottom:.25rem;}
+.hand-text{font-family:'DM Mono',monospace;font-size:clamp(2.6rem,12vw,4.2rem);font-weight:500;letter-spacing:3px;line-height:1;margin-bottom:.2rem;}
 .hand-text.red{color:var(--red);}
-.tap-hint{font-size:11px;color:var(--hint);margin-top:.5rem;letter-spacing:.06em;}
-.reveal-wrap{width:100%;margin-top:.75rem;display:none;flex-direction:column;align-items:center;gap:.5rem;}
+.tap-hint{font-size:11px;color:var(--hint);margin-top:.4rem;letter-spacing:.06em;}
+.reveal-wrap{width:100%;margin-top:.6rem;display:none;flex-direction:column;align-items:center;gap:.45rem;}
 .reveal-wrap.show{display:flex;}
 .rank-pill{font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 14px;border-radius:20px;}
-.pos-box{width:100%;background:var(--surface2);border-radius:10px;padding:8px 12px;display:flex;align-items:flex-start;gap:8px;}
-.pos-icon{font-size:12px;color:var(--muted);margin-top:1px;flex-shrink:0;}
+.pos-box{width:100%;background:var(--surface2);border-radius:10px;padding:7px 11px;display:flex;align-items:flex-start;gap:8px;}
+.pos-icon{font-size:11px;color:var(--muted);margin-top:1px;flex-shrink:0;}
 .pos-label{font-size:9px;color:var(--muted);display:block;margin-bottom:1px;letter-spacing:.06em;text-transform:uppercase;}
 .pos-main{font-size:12px;color:var(--text);line-height:1.4;}
-.hand-desc{font-size:11.5px;color:var(--muted);line-height:1.5;text-align:center;max-width:280px;}
-.judge-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:.6rem 1.25rem 1.1rem;flex-shrink:0;}
-.show-btn{grid-column:1/-1;padding:14px;background:var(--blue-bg);border:1px solid var(--blue);border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .15s;}
+.hand-desc{font-size:11px;color:var(--muted);line-height:1.5;text-align:center;max-width:280px;}
+
+/* mix indicator */
+.mix-indicator{font-size:10px;padding:2px 8px;border-radius:10px;margin-top:4px;font-weight:600;}
+
+.judge-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:.5rem 1.25rem 1rem;flex-shrink:0;}
+.show-btn{grid-column:1/-1;padding:13px;background:var(--blue-bg);border:1px solid var(--blue);border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .15s;}
 .show-btn:active{transform:scale(.97);}
 .show-btn.hidden{display:none;}
-.judge-btn{padding:14px;border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--border);transition:all .15s;display:none;}
+.judge-btn{padding:13px;border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--border);transition:all .15s;display:none;}
 .judge-btn:active{transform:scale(.96);}
 .judge-btn.correct{background:var(--green-bg);border-color:var(--green);color:var(--green);}
 .judge-btn.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);}
@@ -83,17 +107,18 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 
 /* RESULT */
 #result{align-items:center;justify-content:center;padding:2rem 1.5rem;text-align:center;overflow-y:auto;gap:0;}
-.result-emoji{font-size:52px;margin-bottom:.75rem;line-height:1;}
-.result-pct{font-size:clamp(4rem,18vw,6.5rem);font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:.2rem;}
-.result-detail{font-size:13px;color:var(--muted);margin-bottom:.75rem;}
-.result-msg{font-size:13px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto 1.5rem;}
+.result-emoji{font-size:50px;margin-bottom:.6rem;line-height:1;}
+.result-pct{font-size:clamp(3.5rem,16vw,6rem);font-weight:800;font-family:'DM Mono',monospace;line-height:1;margin-bottom:.2rem;}
+.result-detail{font-size:13px;color:var(--muted);margin-bottom:.6rem;}
+.result-msg{font-size:13px;color:var(--muted);line-height:1.7;max-width:300px;margin:0 auto 1.25rem;}
 .result-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:320px;}
-.action-btn{padding:14px;border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s;}
+.action-btn{padding:13px;border-radius:14px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s;}
 .action-btn:active{transform:scale(.97);}
 .action-btn.primary{background:var(--blue);border-color:var(--blue);color:#0a0a0f;}
-.wrong-section{margin-top:1.5rem;width:100%;max-width:320px;text-align:left;}
+.action-btn.weak{background:var(--amber-bg);border-color:var(--amber);color:var(--amber);}
+.wrong-section{margin-top:1.25rem;width:100%;max-width:320px;text-align:left;}
 .wrong-sec-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.wrong-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.wrong-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}
 .wrong-item:last-child{border-bottom:none;}
 .wi-hand{font-family:'DM Mono',monospace;font-weight:500;min-width:44px;font-size:14px;}
 .wi-rank{font-size:11px;font-weight:600;}
@@ -103,18 +128,42 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 <body>
 
 <div id="home" class="screen active">
-  <div class="home-logo">Poker Flashcard — ヨコサワ式</div>
+  <div class="home-logo">Poker Flashcard — ヨコサワ式 v3</div>
   <div class="home-title">ハンドランク<br><span>クイズ</span></div>
-  <div class="home-sub">169種類すべて収録。ヨコサワレンジ表A〜Iランク＋参加ポジションを叩き込もう。</div>
-  <div class="section-label">モードを選ぶ</div>
-  <div class="all-tile" id="tile-all" onclick="selectMode('all',this)">
-    <div class="all-tile-icon">ALL</div>
-    <div>
-      <div class="at-name">全ランク（総復習）</div>
-      <div class="at-sub">A〜I すべて・169問</div>
+  <div class="home-sub">169種類完全収録。間違いを繰り返し出題して弱点を潰す。</div>
+
+  <div class="sec-label">モードを選ぶ</div>
+
+  <!-- 全ランク -->
+  <div class="mode-card" id="tile-all" onclick="selectMode('all',this)">
+    <div class="mode-icon" style="color:var(--blue);">ALL</div>
+    <div class="mode-info">
+      <div class="mn">全ランク（総復習）</div>
+      <div class="ms">A〜I すべて・129問 ランダム</div>
     </div>
   </div>
+
+  <!-- 弱点優先 -->
+  <div class="mode-card" id="tile-weak" onclick="selectMode('weak',this)">
+    <div class="mode-icon" style="color:var(--amber);">💪</div>
+    <div class="mode-info">
+      <div class="mn">弱点優先モード</div>
+      <div class="ms">間違えたハンドを集中出題</div>
+    </div>
+  </div>
+
   <div class="rank-grid" id="rank-grid"></div>
+
+  <!-- 全体の習熟度 -->
+  <div class="stats-panel" id="stats-panel">
+    <div class="sp-title">習熟度（累計）</div>
+    <div class="sp-row">
+      <div class="sp-box"><div class="sp-val" id="sp-total" style="color:var(--blue);">0</div><div class="sp-lbl">総回答</div></div>
+      <div class="sp-box"><div class="sp-val" id="sp-rate" style="color:var(--green);">-%</div><div class="sp-lbl">正答率</div></div>
+      <div class="sp-box"><div class="sp-val" id="sp-weak" style="color:var(--amber);">0</div><div class="sp-lbl">弱点数</div></div>
+    </div>
+  </div>
+
   <button class="start-btn" onclick="startQuiz()">スタート</button>
 </div>
 
@@ -127,9 +176,14 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
     <div class="stat-box"><div class="sv" id="s-rem">-</div><div class="sl">残り</div></div>
     <div class="stat-box"><div class="sv" id="s-ok" style="color:var(--green);">0</div><div class="sl">正解</div></div>
     <div class="stat-box"><div class="sv" id="s-ng" style="color:var(--red);">0</div><div class="sl">不正解</div></div>
+    <div class="stat-box"><div class="sv" id="s-streak" style="color:var(--amber);">0</div><div class="sl">連続正解</div></div>
   </div>
   <div class="prog-wrap">
     <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%;"></div></div>
+  </div>
+  <div class="streak-wrap">
+    <div class="streak-badge" id="streak-badge" style="display:none;"></div>
+    <div class="mix-badge" id="mix-badge" style="display:none;">🎲 混合出題中</div>
   </div>
   <div class="card-wrap">
     <div class="flashcard" id="flashcard" onclick="reveal()">
@@ -146,6 +200,7 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
           </div>
         </div>
         <div class="hand-desc" id="hand-desc"></div>
+        <div class="mix-indicator" id="mix-indicator" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -163,12 +218,14 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
   <div class="result-msg" id="r-msg"></div>
   <div class="result-actions">
     <button class="action-btn primary" onclick="restartSame()">もう一度</button>
+    <button class="action-btn weak" id="btn-weak-mode" onclick="startWeakMode()" style="display:none;">弱点だけ集中練習</button>
     <button class="action-btn" onclick="goHome()">モード選択へ</button>
   </div>
   <div class="wrong-section" id="wrong-section"></div>
 </div>
 
 <script>
+// ══ RANKS ══════════════════════════════════════════
 const RANKS={
   A:{label:"Aランク",color:"#e05252",bg:"rgba(224,82,82,0.15)",   pos:"後ろに8〜9人のとき参加",short:"後ろ8〜9人"},
   B:{label:"Bランク",color:"#e07c3a",bg:"rgba(224,124,58,0.15)",  pos:"後ろに8〜9人のとき参加",short:"後ろ8〜9人"},
@@ -181,19 +238,13 @@ const RANKS={
   I:{label:"Iランク",color:"#666",   bg:"rgba(102,102,102,0.12)", pos:"基本的にフォールド",     short:"フォールド"},
 };
 
-// ヨコサワレンジ表 完全169ハンド
-// 表の構造:
-// 対角線=ポケットペア, 右上=スーテッド(s), 左下=オフスート(o)
-// ランク順: A K Q J T 9 8 7 6 5 4 3 2
+// ══ HANDS (完全129問) ══════════════════════════════
 const HANDS=[
-  // ── Aランク (5手) ──
   {h:"AA", red:false,r:"A",desc:"最強ペア。どのポジションからでも迷わずレイズ。"},
   {h:"KK", red:false,r:"A",desc:"AA以外ほぼ有利。フロップのAには注意。"},
   {h:"QQ", red:false,r:"A",desc:"非常に強いペア。A・Kが出たボードは慎重に。"},
   {h:"JJ", red:false,r:"A",desc:"強いペア。オーバーカードが出やすいので注意。"},
   {h:"AKs",red:true, r:"A",desc:"スーテッドのビッグスリック。最強クラスのハンド。"},
-
-  // ── Bランク (8手) ──
   {h:"TT", red:false,r:"B",desc:"強いペア。フロップのオーバーカード次第で判断を変える。"},
   {h:"99", red:false,r:"B",desc:"中位ペア。セット率12%を意識しつつポジションで判断。"},
   {h:"AQs",red:true, r:"B",desc:"スーテッドのAQ。フラッシュドロー付きで非常に強い。"},
@@ -202,8 +253,6 @@ const HANDS=[
   {h:"KQs",red:true, r:"B",desc:"スーテッドのKQ。連番+同スートで非常に使いやすい。"},
   {h:"KJs",red:true, r:"B",desc:"スーテッドのKJ。連番コネクターで柔軟性が高い。"},
   {h:"QJs",red:true, r:"B",desc:"スーテッドのQJ。ストレート+フラッシュドローが豊富。"},
-
-  // ── Cランク (7手) ──
   {h:"88", red:false,r:"C",desc:"中位ペア。セット狙いがメイン。ポジション有利なときに積極的に。"},
   {h:"77", red:false,r:"C",desc:"小中ペア。セット率12%を念頭にポジション判断。"},
   {h:"ATs",red:true, r:"C",desc:"スーテッドのAT。フラッシュドロー+トップペアを狙える。"},
@@ -211,8 +260,6 @@ const HANDS=[
   {h:"KTs",red:true, r:"C",desc:"スーテッドのKT。連番+同スートで使いやすいハンド。"},
   {h:"QTs",red:true, r:"C",desc:"スーテッドのQT。ドロー豊富で投機的に使える。"},
   {h:"JTs",red:true, r:"C",desc:"スーテッドのJT。ドロー系の中では最強クラス。"},
-
-  // ── Dランク (16手) ──
   {h:"66", red:false,r:"D",desc:"小ペア。セット率12%。安いコールができるときに参加。"},
   {h:"A9s",red:true, r:"D",desc:"スーテッドのA9。ナッツフラッシュドロー+トップペア狙い。"},
   {h:"A8s",red:true, r:"D",desc:"スーテッドのA8。フラッシュドロー狙いがメイン。"},
@@ -229,8 +276,6 @@ const HANDS=[
   {h:"T9s",red:true, r:"D",desc:"スーテッドのT9。コネクター系の優秀なハンド。"},
   {h:"98s",red:true, r:"D",desc:"スーテッドコネクターの代表格。ドロー豊富で柔軟。"},
   {h:"87s",red:true, r:"D",desc:"スーテッドの87。ストレート+フラッシュドロー豊富。"},
-
-  // ── Eランク (11手) ──
   {h:"55", red:false,r:"E",desc:"小ペア。セット以外では勝ちにくい。安くコールできるときのみ。"},
   {h:"Q9s",red:true, r:"E",desc:"スーテッドのQ9。フラッシュドロー+中位ペア狙い。"},
   {h:"J9s",red:true, r:"E",desc:"スーテッドのJ9。ドロー豊富なコネクター系。"},
@@ -242,8 +287,6 @@ const HANDS=[
   {h:"ATo",red:false,r:"E",desc:"オフスートのAT。後ろ4〜5人のときのみ参加。"},
   {h:"KJo",red:false,r:"E",desc:"オフスートのKJ。後ろ4〜5人のときのみ参加。"},
   {h:"QJo",red:false,r:"E",desc:"オフスートのQJ。後ろ4〜5人のときのみ参加。"},
-
-  // ── Fランク (23手) ──
   {h:"44", red:false,r:"F",desc:"小ペア。セット率12%。後ろに3人以下のときのみ参加。"},
   {h:"K7s",red:true, r:"F",desc:"スーテッドのK7。フラッシュドロー狙い。後ろ3人限定。"},
   {h:"K6s",red:true, r:"F",desc:"スーテッドのK6。フラッシュドロー狙い。後ろ3人限定。"},
@@ -267,8 +310,6 @@ const HANDS=[
   {h:"J9o",red:false,r:"F",desc:"オフスートのJ9。後ろ3人のときのみ参加。"},
   {h:"T9o",red:false,r:"F",desc:"オフスートのT9。後ろ3人のときのみ参加。"},
   {h:"98o",red:false,r:"F",desc:"オフスートの98。後ろ3人のときのみ参加。"},
-
-  // ── Gランク (13手) ──
   {h:"33", red:false,r:"G",desc:"小ペア。後ろに2人のみ参加。セット率12%を活かして安く入る。"},
   {h:"22", red:false,r:"G",desc:"最小ペア。セット以外で勝つのは難しい。後ろ2人のみ参加。"},
   {h:"K4s",red:true, r:"G",desc:"スーテッドのK4。フラッシュドロー狙い。後ろ2人限定。"},
@@ -282,8 +323,6 @@ const HANDS=[
   {h:"52s",red:true, r:"G",desc:"スーテッドの52。ストレートドロー狙い。後ろ2人限定。"},
   {h:"43s",red:true, r:"G",desc:"スーテッドの43。ストレートドロー狙い。後ろ2人限定。"},
   {h:"42s",red:true, r:"G",desc:"スーテッドの42。ストレートドロー狙い。後ろ2人限定。"},
-
-  // ── Hランク (28手) ──
   {h:"A9o",red:false,r:"H",desc:"オフスートのA9。BTNからのレイズにコール可能。"},
   {h:"A8o",red:false,r:"H",desc:"オフスートのA8。BTNからのレイズにコール可能。"},
   {h:"A7o",red:false,r:"H",desc:"オフスートのA7。BTNからのレイズにコール可能。"},
@@ -312,8 +351,6 @@ const HANDS=[
   {h:"T6s",red:true, r:"H",desc:"スーテッドのT6。フラッシュ+ストレートドロー。BTNコールのみ。"},
   {h:"T5s",red:true, r:"H",desc:"スーテッドのT5。フラッシュドロー狙い。BTNコールのみ。"},
   {h:"T4s",red:true, r:"H",desc:"スーテッドのT4。フラッシュドロー狙い。BTNコールのみ。"},
-
-  // ── Iランク (残り全て・代表例) ──
   {h:"72o",red:false,r:"I",desc:"最弱ハンドの代表。ポーカーで有名な捨てハンド。フォールド。"},
   {h:"83o",red:false,r:"I",desc:"ギャップ大+オフスート。フォールドが正解。"},
   {h:"94o",red:false,r:"I",desc:"数字も中途半端でオフスート。フォールド。"},
@@ -334,158 +371,320 @@ const HANDS=[
   {h:"62s",red:true, r:"I",desc:"スーテッドの62。ギャップ大。基本フォールド。"},
 ];
 
-let selectedMode="all",deck=[],idx=0,okCount=0,ngCount=0,wrongHands=[],revealed=false;
+// ══ STORAGE ════════════════════════════════════════
+// weakMap: {hand: wrongCount}
+// masteredMap: {hand: correctStreak}
+let weakMap = {}, masteredMap = {}, totalAnswered = 0, totalCorrect = 0;
 
-function buildRankGrid(){
-  const grid=document.getElementById('rank-grid');
-  grid.innerHTML='';
-  Object.entries(RANKS).forEach(([key,r])=>{
-    const cnt=HANDS.filter(h=>h.r===key).length;
-    const tile=document.createElement('div');
-    tile.className='rank-tile';
-    tile.dataset.mode=key;
-    tile.innerHTML=`<div class="rt-badge" style="color:${r.color};">${key}</div><div class="rt-name">${r.label}</div><div class="rt-pos" style="color:${r.color};opacity:.75;">${r.short}</div><div class="rt-cnt">${cnt}問</div>`;
-    tile.onclick=()=>selectMode(key,tile);
+function loadStorage() {
+  try {
+    weakMap      = JSON.parse(localStorage.getItem('pf_weak') || '{}');
+    masteredMap  = JSON.parse(localStorage.getItem('pf_master') || '{}');
+    totalAnswered= parseInt(localStorage.getItem('pf_total') || '0');
+    totalCorrect = parseInt(localStorage.getItem('pf_correct') || '0');
+  } catch(e) {}
+}
+
+function saveStorage() {
+  try {
+    localStorage.setItem('pf_weak',    JSON.stringify(weakMap));
+    localStorage.setItem('pf_master',  JSON.stringify(masteredMap));
+    localStorage.setItem('pf_total',   totalAnswered);
+    localStorage.setItem('pf_correct', totalCorrect);
+  } catch(e) {}
+}
+
+function recordResult(hand, ok) {
+  totalAnswered++;
+  if (ok) {
+    totalCorrect++;
+    masteredMap[hand] = (masteredMap[hand] || 0) + 1;
+    // 3連続正解で弱点から除外
+    if (masteredMap[hand] >= 3 && weakMap[hand]) {
+      delete weakMap[hand];
+    }
+  } else {
+    weakMap[hand] = (weakMap[hand] || 0) + 1;
+    masteredMap[hand] = 0;
+  }
+  saveStorage();
+}
+
+// ══ STATE ══════════════════════════════════════════
+let selectedMode="all", deck=[], idx=0, okCount=0, ngCount=0;
+let wrongHands=[], revealed=false, streak=0, maxStreak=0;
+let isMixMode = false; // ランク別モードで混合出題中かどうか
+let currentRank = null; // ランク別モードの対象ランク
+
+// ══ HOME ═══════════════════════════════════════════
+function buildRankGrid() {
+  const grid = document.getElementById('rank-grid');
+  grid.innerHTML = '';
+  Object.entries(RANKS).forEach(([key, r]) => {
+    const cnt = HANDS.filter(h => h.r === key).length;
+    const tile = document.createElement('div');
+    tile.className = 'rank-tile';
+    tile.dataset.mode = key;
+    tile.innerHTML = `<div class="rt-badge" style="color:${r.color};">${key}</div><div class="rt-name">${r.label}</div><div class="rt-pos" style="color:${r.color};opacity:.75;">${r.short}</div><div class="rt-cnt">${cnt}問</div>`;
+    tile.onclick = () => selectMode(key, tile);
     grid.appendChild(tile);
   });
 }
 
-function selectMode(mode,el){
-  selectedMode=mode;
-  document.querySelectorAll('.rank-tile,.all-tile').forEach(t=>{
-    t.style.borderColor='var(--border)';
-    t.style.background='';
+function updateHomeStats() {
+  document.getElementById('sp-total').textContent = totalAnswered;
+  const rate = totalAnswered > 0 ? Math.round(totalCorrect/totalAnswered*100) : 0;
+  document.getElementById('sp-rate').textContent = totalAnswered > 0 ? rate+'%' : '-%';
+  document.getElementById('sp-weak').textContent = Object.keys(weakMap).length;
+}
+
+function selectMode(mode, el) {
+  selectedMode = mode;
+  document.querySelectorAll('.rank-tile,.mode-card').forEach(t => {
+    t.style.borderColor = 'var(--border)';
+    t.style.background = '';
   });
-  if(mode==='all'){
-    el.style.borderColor='var(--blue)';
-    el.style.background='var(--blue-bg)';
-  }else{
-    const r=RANKS[mode];
-    el.style.borderColor=r.color;
-    el.style.background=r.bg;
+  if (mode === 'all') {
+    el.style.borderColor = 'var(--blue)';
+    el.style.background = 'var(--blue-bg)';
+  } else if (mode === 'weak') {
+    el.style.borderColor = 'var(--amber)';
+    el.style.background = 'var(--amber-bg)';
+  } else {
+    const r = RANKS[mode];
+    el.style.borderColor = r.color;
+    el.style.background = r.bg;
   }
 }
 
-function getDeck(){
-  const pool=selectedMode==='all'?HANDS:HANDS.filter(h=>h.r===selectedMode);
-  return shuffle([...pool]);
-}
-
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
+// ══ DECK BUILDING ══════════════════════════════════
+function buildDeck() {
+  if (selectedMode === 'weak') {
+    // 弱点モード：間違えたハンドを間違い回数の多い順に並べて出題
+    const weakHands = HANDS.filter(h => weakMap[h.h] > 0);
+    if (weakHands.length === 0) return shuffle([...HANDS]);
+    // 間違い回数が多いほど多く入れる（最大3回）
+    let pool = [];
+    weakHands.forEach(h => {
+      const times = Math.min(weakMap[h.h] || 1, 3);
+      for (let i = 0; i < times; i++) pool.push(h);
+    });
+    return shuffle(pool);
   }
-  return arr;
+
+  if (selectedMode === 'all') {
+    // 全ランクモード：弱点ハンドを1.5倍の確率で出題
+    let pool = [];
+    HANDS.forEach(h => {
+      pool.push(h);
+      if (weakMap[h.h] > 0) pool.push(h); // 弱点は2回入れる
+    });
+    return shuffle(pool);
+  }
+
+  // ランク別モード：対象ランク70% + 隣接ランクやIランク30%を混合
+  currentRank = selectedMode;
+  const targetHands = HANDS.filter(h => h.r === selectedMode);
+  const rankKeys = Object.keys(RANKS);
+  const rankIdx = rankKeys.indexOf(selectedMode);
+
+  // 混合用：隣のランクとIランクから選ぶ
+  let mixPool = [];
+  // 前後のランク
+  if (rankIdx > 0) mixPool.push(...HANDS.filter(h => h.r === rankKeys[rankIdx-1]));
+  if (rankIdx < rankKeys.length-1) mixPool.push(...HANDS.filter(h => h.r === rankKeys[rankIdx+1]));
+  // Iランク（フォールド）を必ず少し混ぜる（AランクのときはI以外にする）
+  if (selectedMode !== 'I') {
+    mixPool.push(...HANDS.filter(h => h.r === 'I').slice(0, 4));
+  }
+
+  const mixCount = Math.max(2, Math.floor(targetHands.length * 0.4));
+  const mixSelected = shuffle(mixPool).slice(0, mixCount);
+
+  return shuffle([...targetHands, ...mixSelected]);
 }
 
-function startQuiz(){
-  deck=getDeck();idx=0;okCount=0;ngCount=0;wrongHands=[];
-  const label=selectedMode==='all'?'全ランク':RANKS[selectedMode].label;
-  document.getElementById('mode-label').textContent=label;
-  showScreen('quiz');renderCard();
+function startWeakMode() {
+  selectedMode = 'weak';
+  startQuiz();
 }
 
-function renderCard(){
-  if(idx>=deck.length){showResult();return;}
-  revealed=false;
-  const c=deck[idx],r=RANKS[c.r];
-  const ht=document.getElementById('hand-text');
-  ht.textContent=c.h;
-  ht.className='hand-text'+(c.red?' red':'');
-  document.getElementById('watermark').textContent=c.h[0];
-  document.getElementById('tap-hint').style.display='block';
+// ══ QUIZ ═══════════════════════════════════════════
+function startQuiz() {
+  if (selectedMode === 'weak' && Object.keys(weakMap).length === 0) {
+    alert('まだ弱点ハンドがありません。先に他のモードで練習してください！');
+    return;
+  }
+  deck = buildDeck();
+  idx=0; okCount=0; ngCount=0; wrongHands=[]; streak=0; maxStreak=0;
+  isMixMode = (selectedMode !== 'all' && selectedMode !== 'weak');
+
+  const label = selectedMode==='all'?'全ランク':
+                selectedMode==='weak'?'弱点優先':
+                RANKS[selectedMode].label;
+  document.getElementById('mode-label').textContent = label;
+  document.getElementById('mix-badge').style.display = isMixMode ? 'block' : 'none';
+  showScreen('quiz');
+  renderCard();
+}
+
+function renderCard() {
+  if (idx >= deck.length) { showResult(); return; }
+  revealed = false;
+  const c = deck[idx];
+  const r = RANKS[c.r];
+
+  const ht = document.getElementById('hand-text');
+  ht.textContent = c.h;
+  ht.className = 'hand-text' + (c.red?' red':'');
+  document.getElementById('watermark').textContent = c.h[0];
+  document.getElementById('tap-hint').style.display = 'block';
   document.getElementById('reveal-wrap').classList.remove('show');
-  const fc=document.getElementById('flashcard');
+  const fc = document.getElementById('flashcard');
   fc.classList.remove('revealed');
-  fc.style.borderColor='var(--border)';
+  fc.style.borderColor = 'var(--border)';
   document.getElementById('show-btn').classList.remove('hidden');
   document.getElementById('btn-ok').style.display='none';
   document.getElementById('btn-ng').style.display='none';
   document.getElementById('btn-ok').classList.remove('show');
   document.getElementById('btn-ng').classList.remove('show');
-  updateStats();updateProg();
+  document.getElementById('streak-badge').style.display='none';
+  document.getElementById('mix-indicator').style.display='none';
+  updateStats(); updateProg();
 }
 
-function reveal(){
-  if(revealed)return;
-  revealed=true;
-  const c=deck[idx],r=RANKS[c.r];
-  const pill=document.getElementById('rank-pill');
-  pill.textContent=r.label;
-  pill.style.background=r.bg;
-  pill.style.color=r.color;
-  document.getElementById('pos-main').textContent=r.pos;
-  document.getElementById('hand-desc').textContent=c.desc;
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+  const c = deck[idx];
+  const r = RANKS[c.r];
+
+  const pill = document.getElementById('rank-pill');
+  pill.textContent = r.label;
+  pill.style.background = r.bg;
+  pill.style.color = r.color;
+  document.getElementById('pos-main').textContent = r.pos;
+  document.getElementById('hand-desc').textContent = c.desc;
   document.getElementById('reveal-wrap').classList.add('show');
   document.getElementById('tap-hint').style.display='none';
-  const fc=document.getElementById('flashcard');
+  const fc = document.getElementById('flashcard');
   fc.classList.add('revealed');
-  fc.style.borderColor=r.color;
+  fc.style.borderColor = r.color;
   document.getElementById('show-btn').classList.add('hidden');
   document.getElementById('btn-ok').style.display='block';
   document.getElementById('btn-ng').style.display='block';
   document.getElementById('btn-ok').classList.add('show');
   document.getElementById('btn-ng').classList.add('show');
+
+  // 混合出題のとき「このハンドは対象ランク外」を表示
+  if (isMixMode && c.r !== currentRank) {
+    const mi = document.getElementById('mix-indicator');
+    mi.textContent = '⚠ 混合問題（' + r.label + '）';
+    mi.style.display = 'block';
+    mi.style.background = r.bg;
+    mi.style.color = r.color;
+  }
 }
 
-function judge(ok){
-  if(ok)okCount++;else{ngCount++;wrongHands.push(deck[idx]);}
-  idx++;renderCard();
+function judge(ok) {
+  const c = deck[idx];
+  recordResult(c.h, ok);
+  if (ok) {
+    okCount++;
+    streak++;
+    maxStreak = Math.max(maxStreak, streak);
+    // 連続正解バッジ
+    if (streak >= 3) {
+      const sb = document.getElementById('streak-badge');
+      sb.textContent = '🔥 ' + streak + '連続正解！';
+      sb.style.background = 'rgba(240,164,90,0.15)';
+      sb.style.color = 'var(--amber)';
+      sb.style.display = 'block';
+    }
+  } else {
+    ngCount++;
+    streak = 0;
+    wrongHands.push(c);
+    document.getElementById('streak-badge').style.display='none';
+  }
+  idx++;
+  renderCard();
 }
 
-function updateStats(){
-  document.getElementById('s-rem').textContent=deck.length-idx;
-  document.getElementById('s-ok').textContent=okCount;
-  document.getElementById('s-ng').textContent=ngCount;
+function updateStats() {
+  document.getElementById('s-rem').textContent = deck.length - idx;
+  document.getElementById('s-ok').textContent  = okCount;
+  document.getElementById('s-ng').textContent  = ngCount;
+  document.getElementById('s-streak').textContent = streak;
 }
 
-function updateProg(){
-  document.getElementById('prog').style.width=Math.round(idx/deck.length*100)+'%';
+function updateProg() {
+  document.getElementById('prog').style.width = Math.round(idx/deck.length*100)+'%';
 }
 
-function showResult(){
-  const pct=Math.round(okCount/deck.length*100);
-  const el=document.getElementById('r-pct');
-  el.textContent=pct+'%';
-  el.style.color=pct>=90?'var(--green)':pct>=70?'#f0a45a':'var(--red)';
-  document.getElementById('r-emoji').textContent=pct>=90?'🎉':pct>=70?'👍':'💪';
-  document.getElementById('r-detail').textContent=`${deck.length}問中 ${okCount}問正解`;
-  document.getElementById('r-msg').textContent=pct>=90
+// ══ RESULT ═════════════════════════════════════════
+function showResult() {
+  const pct = Math.round(okCount/deck.length*100);
+  const el = document.getElementById('r-pct');
+  el.textContent = pct+'%';
+  el.style.color = pct>=90?'var(--green)':pct>=70?'var(--amber)':'var(--red)';
+  document.getElementById('r-emoji').textContent = pct>=90?'🎉':pct>=70?'👍':'💪';
+  document.getElementById('r-detail').textContent =
+    `${deck.length}問中 ${okCount}問正解　最大${maxStreak}連続`;
+  document.getElementById('r-msg').textContent = pct>=90
     ?'完璧！反射神経が鍛えられている証拠。次のランクへ進もう。'
     :pct>=70?'いい感じ！間違えたハンドだけ集中的に叩き直そう。'
     :'焦らずOK。同じランクをもう一度繰り返すのが最短ルート。';
-  const ws=document.getElementById('wrong-section');
-  ws.innerHTML='';
-  if(wrongHands.length>0){
-    const tl=document.createElement('div');
-    tl.className='wrong-sec-label';tl.textContent='間違えたハンド';
+
+  // 弱点モードボタン
+  const wb = document.getElementById('btn-weak-mode');
+  wb.style.display = Object.keys(weakMap).length > 0 ? 'block' : 'none';
+
+  // 間違いリスト
+  const ws = document.getElementById('wrong-section');
+  ws.innerHTML = '';
+  if (wrongHands.length > 0) {
+    const tl = document.createElement('div');
+    tl.className='wrong-sec-label';
+    tl.textContent=`間違えたハンド（${wrongHands.length}問）`;
     ws.appendChild(tl);
-    wrongHands.forEach(h=>{
-      const r=RANKS[h.r];
-      const row=document.createElement('div');
+    // 重複除去
+    const seen = new Set();
+    wrongHands.forEach(h => {
+      if (seen.has(h.h)) return;
+      seen.add(h.h);
+      const r = RANKS[h.r];
+      const row = document.createElement('div');
       row.className='wrong-item';
       row.innerHTML=`<span class="wi-hand" style="color:${h.red?'var(--red)':'var(--text)'}">${h.h}</span><div><div class="wi-rank" style="color:${r.color}">${r.label}</div><div class="wi-pos">${r.short}</div></div>`;
       ws.appendChild(row);
     });
   }
   showScreen('result');
+  updateHomeStats();
 }
 
-function restartSame(){
-  deck=getDeck();idx=0;okCount=0;ngCount=0;wrongHands=[];
+function restartSame() {
+  deck=buildDeck();
+  idx=0;okCount=0;ngCount=0;wrongHands=[];streak=0;maxStreak=0;
   showScreen('quiz');renderCard();
 }
 
-function goHome(){showScreen('home');}
+function goHome() {
+  updateHomeStats();
+  showScreen('home');
+}
 
-function showScreen(id){
+function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
+// ══ INIT ═══════════════════════════════════════════
+loadStorage();
 buildRankGrid();
-selectMode('all',document.getElementById('tile-all'));
+selectMode('all', document.getElementById('tile-all'));
+updateHomeStats();
 </script>
 </body>
 </html>
