@@ -410,6 +410,15 @@ function recordResult(hand, ok) {
   saveStorage();
 }
 
+// ══ UTILS ═════════════════════════════════════════
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
 // ══ STATE ══════════════════════════════════════════
 let selectedMode="all", deck=[], idx=0, okCount=0, ngCount=0;
 let wrongHands=[], revealed=false, streak=0, maxStreak=0;
