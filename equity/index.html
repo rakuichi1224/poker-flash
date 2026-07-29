@@ -117,6 +117,9 @@
   .reset{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim);background:none;
          border:none;text-decoration:underline;cursor:pointer;padding:4px;}
   .loading{text-align:center;padding:40px 0;font-family:var(--mono);font-size:12px;color:var(--dim);}
+  .ex-h{font-size:11px;font-weight:700;letter-spacing:.04em;margin:12px 0 5px;padding-left:7px;border-left:3px solid var(--ink);}
+  .ex-b{font-size:12.5px;line-height:1.75;padding-left:10px;}
+  .ex-b b{font-family:var(--mono);font-weight:700;}
   .anc-lead{font-size:12.5px;line-height:1.7;margin:10px 0 14px;}
   .stair{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px;}
   .stair-i{display:flex;align-items:baseline;gap:7px;border:1.5px solid var(--ink);background:#fff;padding:8px 9px;}
@@ -239,20 +242,25 @@ function turnMap(h1,h2,board){
   const byRank=new Map();
   for(const tc of rem){
     const b4=[...board,tc];
-    let w=0,l=0,t=0;
+    let w=0,l=0,t=0; const wa=new Set(), wb=new Set();
     for(const rc of rem){
       if(rc===tc) continue;
       const b=[...b4,rc];
       const d=cmp(evalHand([...h1,...b]),evalHand([...h2,...b]));
-      if(d>0)w++; else if(d<0)l++; else t++;
+      if(d>0){w++; wa.add(rv(rc));} else if(d<0){l++; wb.add(rv(rc));} else t++;
     }
     const r=rv(tc);
     if(!byRank.has(r)) byRank.set(r,[]);
-    byRank.get(r).push((w+t/2)/(w+l+t));
+    byRank.get(r).push({eq:(w+t/2)/(w+l+t), n:rem.filter(c=>rv(c)===r).length, wa, wb});
   }
-  return [...byRank.entries()]
-    .map(([rank,list])=>({rank,label:rankName(rank),eq:list.reduce((a,b)=>a+b,0)/list.length}))
-    .sort((a,b)=>b.rank-a.rank);
+  // 同ランクでもスートで挙動が変わりうるため、勝てるリバーは全スートで共通のものだけ採る
+  const inter=(sets)=>[...sets[0]].filter(x=>sets.every(s=>s.has(x)));
+  return [...byRank.entries()].map(([rank,list])=>({
+    rank, label:rankName(rank), n:list[0].n,
+    eq:list.reduce((a,b)=>a+b.eq,0)/list.length,
+    winA:inter(list.map(x=>x.wa)),
+    winB:inter(list.map(x=>x.wb))
+  })).sort((a,b)=>b.rank-a.rank);
 }
 
 /* ============================================================
@@ -263,16 +271,27 @@ function describe(hand,board){
   const all=[...hand,...board], ev=evalHand(all), cat=ev[0];
   const br=board.map(rv).sort((a,b)=>b-a), hr=hand.map(rv).sort((a,b)=>b-a);
   const pocket=hr[0]===hr[1];
+  const bc={}; for(const r of br) bc[r]=(bc[r]||0)+1;
   let made=CAT_JP[cat];
   if(cat===1){
     const pr=ev[1];
-    if(pocket&&hr[0]===pr){
+    if(bc[pr]>=2){
+      // ペアがボード上にしかない＝実質ノーペア（ボードを使っているだけ）
+      made="ノーペア（ボードの"+rankName(pr)+"ペア）";
+    } else if(pocket&&hr[0]===pr){
       made = pr>br[0] ? "オーバーペア" : pr<br[br.length-1] ? "アンダーペア" : "ミドルポケットペア";
     } else {
       const i=br.indexOf(pr);
       made = i===0?"トップペア":i===1?"セカンドペア":i===2?"ボトムペア":"ワンペア";
     }
-  } else if(cat===3){ made = pocket?"セット":"トリップス"; }
+  } else if(cat===2){
+    // ツーペアの両方がボード由来なら、実質ノーペア
+    if(bc[ev[1]]>=2&&bc[ev[2]]>=2) made="ノーペア（ボードのツーペア）";
+    else if(pocket) made="ツーペア（ポケット"+rankName(hr[0])+"）";
+  } else if(cat===3){
+    if(bc[ev[1]]>=3) made="ノーペア（ボードのスリーカード）";
+    else made = pocket?"セット":"トリップス";
+  }
 
   const draws=[]; let outs=0;
   const sc={}; for(const c of all) sc[su(c)]=(sc[su(c)]||0)+1;
@@ -452,6 +471,84 @@ function answer(side){
   setTimeout(()=>{ S.tmap=turnMap(S.spot.h1,S.spot.h2,S.spot.board); render(); },20);
 }
 
+/* 解説の自動生成（計算で確かめられることだけを書く） */
+function buildExplain(sp,tmap){
+  const eqA=sp.eq*100, underA=eqA<50;
+  const U=underA?"A":"B", F=underA?"B":"A";
+  const uHand=underA?sp.h1:sp.h2, uD=underA?sp.d1:sp.d2, fD=underA?sp.d2:sp.d1;
+  const uEq=underA?eqA:100-eqA, baseU=uEq/100;
+  const seen=[...sp.h1,...sp.h2,...sp.board];
+  const boardOnly=(d)=>d.made.indexOf("ノーペア（ボード")===0;
+
+  // 盤面の性質
+  const rs=sp.board.map(rv), ss=sp.board.map(su);
+  const paired=new Set(rs).size<3, suitN=new Set(ss).size;
+  const tone=suitN===1?"モノトーン":suitN===2?"ツートーン":"レインボー";
+  const sorted=[...rs].sort((a,b)=>b-a), spread=sorted[0]-sorted[2];
+  let bnote;
+  if(paired) bnote="ペアボード。両者がボードのペアを共有するので、問われるのは「ボードに何を足せたか」だけになる。";
+  else if(suitN===1) bnote="モノトーン。フラッシュが絡むかどうかが最優先。";
+  else if(spread<=4) bnote="つながった盤面。ストレートの筋が多く、made hand でも安心できない。";
+  else bnote="乾いた盤面。ドローが少なく、現状の役の強さがそのまま出やすい。";
+
+  // 勝ち筋の分類
+  const before=evalHand([...uHand,...sp.board])[0];
+  const direct=[], again=[], dead=[], poison=[];
+  for(const t of tmap){
+    const ua=underA?t.eq:1-t.eq, delta=(ua-baseU)*100;
+    const cards=FULL.filter(c=>rv(c)===t.rank&&!seen.includes(c));
+    const after=Math.max(...cards.map(c=>evalHand([...uHand,...sp.board,c])[0]));
+    const win=underA?t.winA:t.winB;
+    if(ua>=0.5){ direct.push({...t,ua}); continue; }
+    // 分類は排他にする（ドローデッド > 毒アウト > 重ねて届く筋）
+    if(ua<=0.005){ dead.push(t); continue; }
+    const pairsUp=uHand.map(rv).includes(t.rank);
+    const comp=cards.some(c=>{const a=evalHand([...uHand,...sp.board,c])[0];return a>=4&&a>before;});
+    if((pairsUp||comp)&&after>before&&delta<2){ poison.push(t); continue; }
+    if(win.indexOf(t.rank)>=0) again.push(t);
+  }
+  const outs=direct.reduce((s,x)=>s+x.n,0), rough=outs*4;
+  const L=(a)=>a.map(x=>x.label).join("・");
+
+  let h='<div class="sec"><div class="sec-h">なぜこの数字になるのか</div>';
+
+  h+='<div class="ex-h">盤面</div><div class="ex-b">'
+   + sp.board.map(c=>rankName(rv(c))).join("-")+' ／ '+tone+(paired?"・ペアボード":"")+'<br>'+bnote+'</div>';
+
+  h+='<div class="ex-h">ボードを引き算する</div><div class="ex-b">'
+   + '<b>A</b>　'+(boardOnly(sp.d1)?"ボードに何も足していない（"+sp.d1.made+"）":sp.d1.made)
+   + (sp.d1.draws.length?"／"+sp.d1.draws.join("・"):"")+'<br>'
+   + '<b>B</b>　'+(boardOnly(sp.d2)?"ボードに何も足していない（"+sp.d2.made+"）":sp.d2.made)
+   + (sp.d2.draws.length?"／"+sp.d2.draws.join("・"):"")+'</div>';
+
+  h+='<div class="ex-h">不利な側（'+U+'）の勝ち筋</div><div class="ex-b">';
+  let i=1;
+  if(direct.length) h+='<b>'+(i++)+'</b> ターンで '+L(direct)+' を引く … '+outs+'枚。これだけで形勢が逆転する<br>';
+  if(again.length) h+='<b>'+(i++)+'</b> ターンで '+L(again)+' が落ち、リバーで同じランクがもう1枚 … 重ねて初めて届く筋<br>';
+  if(i===1) h+='単発で逆転できるカードがない。複数枚が重なる筋だけが残っている<br>';
+  h+='</div>';
+
+  h+='<div class="ex-h">数え方の確認</div><div class="ex-b">';
+  if(direct.length){
+    h+='直接の筋 '+outs+'枚 × 4 = <b>'+rough+'%</b>　／　実測 <b>'+uEq.toFixed(1)+'%</b><br>';
+    const gap=uEq-rough;
+    h+= Math.abs(gap)<2 ? '概算がそのまま当たる形。'
+      : gap>0 ? '差の約'+gap.toFixed(0)+'ptが、上の重ねて届く筋の分。'
+      : '概算より'+Math.abs(gap).toFixed(0)+'pt低い。アウトの一部が質の悪いもの（下の注意を参照）。';
+  } else {
+    h+='単発のアウツが無いため ×4 は使えない。実測 <b>'+uEq.toFixed(1)+'%</b>。';
+  }
+  h+='</div>';
+
+  if(dead.length||poison.length){
+    h+='<div class="ex-h">注意すべきカード</div><div class="ex-b">';
+    if(dead.length) h+='<b>'+L(dead)+'</b> … '+U+'の勝率が0%になる。落ちた時点でドローデッド<br>';
+    if(poison.length) h+='<b>'+L(poison)+'</b> … 毒アウト。役は上がるのに勝率が伸びない<br>';
+    h+='</div>';
+  }
+  return h+'</div>';
+}
+
 /* アンカー表ビュー */
 function renderAnchors(){
   let h='<div class="eyebrow" style="text-align:center">Anchors</div>';
@@ -548,9 +645,10 @@ function render(){
 
     const anc=nearestAnchor(truePct);
     if(anc){
-      h+='<div class="sec"><div class="sec-h">近いアンカー値</div><div class="note"><b>'+esc(anc.disp)+' — '+esc(anc.label)+'</b>（'+anc.who+'側から見た値）。暗記済みの基準値でほぼ代用できる形です。</div></div>';
+      h+='<div class="sec"><div class="sec-h">数値が近い基準値</div><div class="note"><b>'+esc(anc.disp)+' — '+esc(anc.label)+'</b>（'+anc.who+'側）。<span style="color:var(--dim)">役の構成は違うことがあります。勝率の目盛りとして見てください。</span></div></div>';
     }
 
+    if(S.tmap) h+=buildExplain(sp,S.tmap);
     h+='<div class="sec"><div class="sec-h">ターンで形勢が動くカード</div>';
     if(!S.tmap){
       h+='<div class="note" style="color:var(--dim)">計算中…</div>';
