@@ -117,6 +117,17 @@
   .reset{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim);background:none;
          border:none;text-decoration:underline;cursor:pointer;padding:4px;}
   .loading{text-align:center;padding:40px 0;font-family:var(--mono);font-size:12px;color:var(--dim);}
+  .anc-lead{font-size:12.5px;line-height:1.7;margin:10px 0 14px;}
+  .stair{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px;}
+  .stair-i{display:flex;align-items:baseline;gap:7px;border:1.5px solid var(--ink);background:#fff;padding:8px 9px;}
+  .stair-n{font-family:var(--mono);font-size:10px;color:var(--steel);background:var(--ink);padding:1px 5px;}
+  .stair-a{font-size:11.5px;font-weight:600;}
+  .stair-b{font-family:var(--mono);font-size:12px;font-weight:700;margin-left:auto;}
+  .anc-list{border-top:1px solid var(--rule);}
+  .anc-row{display:flex;align-items:baseline;gap:10px;padding:8px 2px;border-bottom:1px solid var(--rule);}
+  .anc-l{font-size:12px;line-height:1.4;}
+  .anc-v{font-family:var(--mono);font-size:14px;font-weight:700;margin-left:auto;white-space:nowrap;
+         font-variant-numeric:tabular-nums;}
   @media (prefers-reduced-motion:reduce){ .fa,.fb,.gap,.needle,.pace i{transition:none;} }
   @media (max-width:360px){
     .lg{width:46px;height:64px;} .lg .r{font-size:23px;}
@@ -139,6 +150,7 @@
   <button class="tog" id="m-binary" aria-pressed="true">どっちが有利?</button>
   <button class="tog" id="m-estimate" aria-pressed="false">勝率を当てる</button>
   <button class="tog" id="m-close" aria-pressed="false">僅差だけ出す</button>
+  <button class="tog" id="m-anchors" aria-pressed="false">アンカー表</button>
 </div>
 
 <div class="panel" id="panel"><div class="loading">配牌中…</div></div>
@@ -337,27 +349,40 @@ function makeSpot(closeOnly){
   return {h1,h2,board,eq:flopEquity(h1,h2,board),d1:describe(h1,board),d2:describe(h2,board)};
 }
 
+/* 検算済みのアンカー値（各3例の実測にもとづく） */
 const ANCHORS=[
-  {eq:16,label:"ガットショットのみ"},
-  {eq:24,label:"オーバーカード2枚のみ"},
-  {eq:25,label:"セット vs フラッシュドロー"},
-  {eq:32,label:"オープンエンドのみ"},
-  {eq:35,label:"トップペア vs フラッシュドロー"},
-  {eq:36,label:"フラッシュドローのみ"},
-  {eq:46,label:"AKs vs QQ（プリフロップ）"},
-  {eq:54,label:"コンボドロー（FD+OESD）"},
-  {eq:70,label:"ペア vs オーバーカード2枚"},
+  {eq:18,disp:"16〜20%",side:"draw",label:"ガットショットのみ vs オーバーペア"},
+  {eq:25,disp:"25%",side:"draw",label:"オーバーカード2枚のみ vs アンダーペア"},
+  {eq:33,disp:"33%",side:"draw",label:"オープンエンドのみ vs オーバーペア"},
+  {eq:37,disp:"37%",side:"draw",label:"フラッシュドローのみ vs オーバーペア"},
+  {eq:56,disp:"56%",side:"draw",label:"コンボドロー（FD+OESD） vs オーバーペア"},
+  {eq:63,disp:"63%",side:"made",label:"トップペア vs フラッシュドロー"},
+  {eq:66,disp:"66%",side:"made",label:"トップペア vs オープンエンド"},
+  {eq:66,disp:"66%",side:"made",label:"オーバーペア vs オープンエンド"},
+  {eq:74,disp:"74%",side:"made",label:"セット vs フラッシュドロー"},
+  {eq:75,disp:"75%",side:"made",label:"ツーペア vs オーバーペア"},
+  {eq:79,disp:"79%",side:"made",label:"トップペア vs セカンドペア"},
+  {eq:87,disp:"87%",side:"made",label:"ドミネート（AK vs AQ） Aハイボード"},
+  {eq:91,disp:"91%",side:"made",label:"オーバーペア vs アンダーペア"},
+  {eq:96,disp:"96%",side:"made",label:"セット vs セット（上）"},
+  {eq:98,disp:"98%",side:"made",label:"セット vs トップペア"},
 ];
-function nearestAnchor(p){
-  let best=ANCHORS[0];
-  for(const a of ANCHORS) if(Math.abs(a.eq-p)<Math.abs(best.eq-p)) best=a;
-  return Math.abs(best.eq-p)<=4?best:null;
+/* A側・B側の両方から見て、近い基準値を探す */
+function nearestAnchor(pctA){
+  let best=null;
+  for(const a of ANCHORS){
+    for(const [p,who] of [[pctA,"A"],[100-pctA,"B"]]){
+      const d=Math.abs(a.eq-p);
+      if(d<=4 && (!best || d<best.d || (d===best.d && who==="A" && best.who!=="A"))) best={...a,d,who};
+    }
+  }
+  return best;
 }
 
 /* ============================================================
    状態と描画
    ============================================================ */
-const S={mode:"binary",closeOnly:false,spot:null,phase:"ask",guess:50,choice:null,tmap:null,elapsed:0,t0:0};
+const S={mode:"binary",closeOnly:false,spot:null,phase:"ask",guess:50,choice:null,tmap:null,elapsed:0,t0:0,view:"quiz"};
 const DEFAULT_STATS={n:0,correct:0,errSum:0,errN:0,streak:0,best:0};
 let stats={...DEFAULT_STATS};
 try{ const raw=localStorage.getItem("equity-trainer-stats"); if(raw) stats={...DEFAULT_STATS,...JSON.parse(raw)}; }catch(e){}
@@ -384,6 +409,18 @@ function startClock(){
   },100);
 }
 function stopClock(){ clearInterval(paceTimer); }
+function pauseClock(){ clearInterval(paceTimer); }
+function resumeClock(){
+  clearInterval(paceTimer);
+  S.t0=Date.now()-S.elapsed*1000;
+  paceTimer=setInterval(()=>{
+    S.elapsed=(Date.now()-S.t0)/1000;
+    $("clock").textContent=S.elapsed.toFixed(1)+"s";
+    const pct=Math.min(100,(S.elapsed/3)*100);
+    $("pace").firstElementChild.style.width=pct+"%";
+    if(S.elapsed>3) $("pace").classList.add("over");
+  },100);
+}
 
 function deal(){
   S.phase="ask"; S.guess=50; S.choice=null; S.tmap=null;
@@ -415,7 +452,48 @@ function answer(side){
   setTimeout(()=>{ S.tmap=turnMap(S.spot.h1,S.spot.h2,S.spot.board); render(); },20);
 }
 
+/* アンカー表ビュー */
+function renderAnchors(){
+  let h='<div class="eyebrow" style="text-align:center">Anchors</div>';
+  h+='<div class="anc-lead">実測にもとづく基準値。まず<b>4段の階段</b>を体に入れて、そこから微調整するのが速い。</div>';
+  h+='<div class="stair">';
+  [["ドロー側","〜37%"],["made hand","60%台"],["セット級","75%前後"],["圧倒","90%超"]].forEach(([a,b],i)=>{
+    h+='<div class="stair-i"><span class="stair-n">'+(i+1)+'</span><span class="stair-a">'+a+'</span><span class="stair-b">'+b+'</span></div>';
+  });
+  h+='</div>';
+
+  h+='<div class="sec"><div class="sec-h">ドロー側から見た勝率</div><div class="anc-list">';
+  for(const a of ANCHORS.filter(x=>x.side==="draw")){
+    h+='<div class="anc-row"><span class="anc-l">'+esc(a.label)+'</span><span class="anc-v">'+esc(a.disp)+'</span></div>';
+  }
+  h+='</div></div>';
+
+  h+='<div class="sec"><div class="sec-h">made hand 側から見た勝率</div><div class="anc-list">';
+  for(const a of ANCHORS.filter(x=>x.side==="made")){
+    h+='<div class="anc-row"><span class="anc-l">'+esc(a.label)+'</span><span class="anc-v">'+esc(a.disp)+'</span></div>';
+  }
+  h+='</div></div>';
+
+  h+='<div class="sec"><div class="sec-h">使う手順</div><div class="note">'
+   + '<b>① 弱い側からアウツを数える</b>　フロップなら ×4。<br>'
+   + '<b>② アウトの質で割り引く</b>　毒アウト（役は上がるのに相手がもっと伸びる）は数えない。再逆転されるアウトは0.7枚で見る。<br>'
+   + '<b>③ 相手のドローを引く</b>　相手にもドローがあれば、さらに2〜3割減らす。'
+   + '</div></div>';
+
+  h+='<button class="next" id="anc-close">問題に戻る</button>';
+  $("panel").innerHTML=h;
+  $("anc-close").addEventListener("click",()=>setView("quiz"));
+}
+
+function setView(v){
+  S.view=v;
+  $("m-anchors").setAttribute("aria-pressed",String(v==="anchors"));
+  if(v==="anchors"){ pauseClock(); renderAnchors(); }
+  else { render(); if(S.phase==="ask") resumeClock(); }
+}
+
 function render(){
+  if(S.view==="anchors"){ renderAnchors(); return; }
   const sp=S.spot; if(!sp) return;
   const truePct=sp.eq*100;
   const guessPct = S.mode==="estimate" ? S.guess : (S.choice==="A"?75:S.choice==="B"?25:50);
@@ -470,7 +548,7 @@ function render(){
 
     const anc=nearestAnchor(truePct);
     if(anc){
-      h+='<div class="sec"><div class="sec-h">近いアンカー値</div><div class="note"><b>'+anc.eq+'% — '+esc(anc.label)+'</b>。暗記済みの基準値でほぼ代用できる形です。</div></div>';
+      h+='<div class="sec"><div class="sec-h">近いアンカー値</div><div class="note"><b>'+esc(anc.disp)+' — '+esc(anc.label)+'</b>（'+anc.who+'側から見た値）。暗記済みの基準値でほぼ代用できる形です。</div></div>';
     }
 
     h+='<div class="sec"><div class="sec-h">ターンで形勢が動くカード</div>';
@@ -535,8 +613,10 @@ function setMode(m){
   S.mode=m;
   $("m-binary").setAttribute("aria-pressed",String(m==="binary"));
   $("m-estimate").setAttribute("aria-pressed",String(m==="estimate"));
+  if(S.view==="anchors"){ renderStats(); return; }
   if(S.phase==="ask") render(); else renderStats();
 }
+$("m-anchors").addEventListener("click",()=>setView(S.view==="anchors"?"quiz":"anchors"));
 $("m-binary").addEventListener("click",()=>setMode("binary"));
 $("m-estimate").addEventListener("click",()=>setMode("estimate"));
 $("m-close").addEventListener("click",()=>{

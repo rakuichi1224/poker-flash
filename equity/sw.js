@@ -1,5 +1,5 @@
 /* 中身を更新したら、この番号を必ず1つ上げること（v1 -> v2） */
-const CACHE = "equity-v1";
+const CACHE = "equity-v2";
 
 const ASSETS = [
   "./",
