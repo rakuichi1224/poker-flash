@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ポーカー暗記ドリル</title>
+<meta name="theme-color" content="#0D141C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="ドリル">
+<meta name="description" content="ポーカー用語とポジションの暗記ドリル。用語カード・ポジション図・クイズの3構成。">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D141C; --plate:#151F2B; --plate2:#1B2836;
+  --line:#2C4258; --line2:#3E5B76;
+  --chalk:#E6EDF3; --dim:#8AA2B8;
+  --amber:#F0A63C; --cyan:#4FC3D9; --red:#E0574E; --green:#5FBF8E;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --jp:'Zen Kaku Gothic New','Hiragino Sans','Noto Sans JP',system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--ink);color:var(--chalk);font-family:var(--jp);
+     -webkit-text-size-adjust:100%}
+.wrap{max-width:480px;margin:0 auto;padding:20px 16px 56px}
+
+/* 表題欄 */
+.title{border:1px solid var(--line2);display:flex;margin-bottom:18px}
+.title .left{padding:12px 14px;flex:1}
+.title .right{border-left:1px solid var(--line2);padding:12px 14px;display:flex;align-items:center}
+.eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+.h1{font-size:19px;font-weight:700;margin-top:4px}
+.meta{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.1em;text-align:right;line-height:1.6}
+
+/* タブ */
+.tabs{display:flex;border:1px solid var(--line);margin-bottom:20px}
+.tab{flex:1;background:none;border:0;border-bottom:2px solid transparent;padding:10px 4px;cursor:pointer;color:var(--dim);font-family:var(--jp)}
+.tab+.tab{border-left:1px solid var(--line)}
+.tab .jp{font-size:13px;font-weight:500}
+.tab .en{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--line2);margin-top:2px}
+.tab.on{background:var(--plate2);border-bottom-color:var(--amber);color:var(--chalk)}
+.tab.on .en{color:var(--amber)}
+
+/* 汎用 */
+.row{display:flex;gap:8px}
+.between{display:flex;justify-content:space-between;align-items:center}
+.lab{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.seg{flex:1;font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:10px 0;border:1px solid var(--line);color:var(--dim);background:none;cursor:pointer}
+.seg.on{border-color:var(--amber);color:var(--amber)}
+.seg.cy.on{border-color:var(--cyan);color:var(--cyan)}
+.chip{font-size:12px;padding:6px 10px;border:1px solid var(--line);color:var(--dim);background:none;cursor:pointer;font-family:var(--jp)}
+.chip.on{border-color:var(--cyan);color:var(--cyan)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.btn{padding:13px 14px;border:1px solid var(--line2);background:none;color:var(--chalk);
+     font-family:var(--jp);font-size:14px;font-weight:500;cursor:pointer;width:100%}
+.btn.amber{background:var(--amber);border-color:var(--amber);color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:default}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{border:1px solid var(--line);background:var(--plate);padding:8px}
+.bar{height:2px;background:var(--line);margin:8px 0 18px}
+.bar > i{display:block;height:2px;background:var(--amber);transition:width .3s}
+button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.hint{font-size:11px;color:var(--dim);line-height:1.7;margin-top:10px}
+
+/* カード */
+.flipwrap{perspective:1200px;cursor:pointer;margin-bottom:16px}
+.flip{position:relative;min-height:236px;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.flip.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+      padding:26px 20px;display:flex;flex-direction:column;justify-content:center}
+.front{background:var(--plate);border:1px solid var(--line2);position:relative}
+.back{background:var(--plate2);border:1px solid var(--amber);transform:rotateY(180deg)}
+.term{font-size:29px;font-weight:700;line-height:1.25;margin:14px 0 8px}
+.en{font-family:var(--mono);font-size:12px;color:var(--cyan)}
+.tapnote{font-family:var(--mono);font-size:9px;color:var(--line2);letter-spacing:.2em;margin-top:22px}
+.def{font-size:16px;line-height:1.85}
+.backterm{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em;margin-bottom:12px}
+
+/* 詳細 */
+.detail{border:1px solid var(--line2);background:var(--plate);padding:18px;margin-top:14px}
+.code{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--amber);letter-spacing:.04em}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.body{font-size:14px;line-height:1.8}
+.sub{font-size:12px;color:var(--dim);line-height:1.7;margin-top:8px}
+.result{border:1px solid var(--line2);background:var(--plate2);padding:16px;margin:12px 0}
+.result.ok{border-color:var(--green)} .result.ng{border-color:var(--red)}
+.verdict{font-family:var(--mono);font-size:11px;letter-spacing:.16em;margin-bottom:8px}
+.choice{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.06em;padding:14px 0;
+        border:1px solid var(--line2);background:none;color:var(--chalk);cursor:pointer}
+.choice.ok{border-color:var(--green);color:var(--green)}
+.choice.ng{border-color:var(--red);color:var(--red)}
+.choice.off{border-color:var(--line);color:var(--dim)}
+.q{font-size:15px;font-weight:500;padding:10px 10px 4px}
+.q .code-s{font-family:var(--mono);color:var(--amber);font-weight:700}
+.q .sz{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:8px}
+@media (prefers-reduced-motion: reduce){.flip,.bar>i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">
+    <div class="left">
+      <div class="eyebrow">NLH / STUDY SHEET</div>
+      <div class="h1">ポーカー暗記ドリル</div>
+    </div>
+    <div class="right"><div class="meta" id="metaCount"></div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="terms"><div class="jp">用語</div><div class="en">TERMS</div></button>
+    <button class="tab" data-tab="map"><div class="jp">ポジション図</div><div class="en">SEATS</div></button>
+    <button class="tab" data-tab="quiz"><div class="jp">クイズ</div><div class="en">DRILL</div></button>
+  </div>
+
+  <div id="view"></div>
+</div>
+
+<script>
+/* ========== データ ========== */
+var CATS = ["アクション","ポジション","ボード/ハンド","レンジ/GTO","数学"];
+
+var TERMS = [
+{t:"3ベット",e:"3-bet",c:"アクション",d:"プリフロップのオープンレイズに対するリレイズ。ポストフロップでは、そのストリートで3回目のベットを指す。"},
+{t:"4ベット",e:"4-bet",c:"アクション",d:"3ベットに対するリレイズ。多くはバリューとブラフ（A5s などブロッカー持ち）のポラライズ構成。"},
+{t:"スクイーズ",e:"squeeze",c:"アクション",d:"オープン＋コールドコーラーがいる状況での3ベット。挟まれた側は降ろされやすく、フォールドエクイティが高い。"},
+{t:"アイソレート",e:"isolate",c:"アクション",d:"リンパーや弱いプレイヤーに対してレイズし、1対1に持ち込むこと。"},
+{t:"コールドコール",e:"cold call",c:"アクション",d:"自分がまだ1円も入れていない状態でレイズにコールすること。"},
+{t:"リンプ",e:"limp",c:"アクション",d:"プリフロップでレイズせず BB と同額コールで参加すること。先頭からのオープンリンプは基本非推奨。"},
+{t:"Cベット",e:"continuation bet",c:"アクション",d:"プリフロップのアグレッサーがフロップでも続けて打つベット。レンジアドバンテージが根拠。"},
+{t:"ダブルバレル",e:"double barrel",c:"アクション",d:"フロップに続いてターンでも打つこと。3発目はトリプルバレル。"},
+{t:"ドンクベット",e:"donk bet",c:"アクション",d:"前ストリートのアグレッサーでない側が OOP から先に打つベット。ボードが自分のレンジに有利に変わった時に成立する。"},
+{t:"プローブベット",e:"probe bet",c:"アクション",d:"アグレッサーがチェックバックした次のストリートで、OOP 側から打つベット。"},
+{t:"チェックレイズ",e:"check-raise",c:"アクション",d:"チェックして相手に打たせ、その上からレイズすること。OOP の強力な武器。"},
+{t:"チェックバック",e:"check back",c:"アクション",d:"IP 側がベットせずチェックして次のストリートへ進めること。ポットコントロールと引き換えにレンジの上限が固定される。"},
+{t:"フロート",e:"float",c:"アクション",d:"現時点では弱いが、次のストリートで奪う意図を持ってコールすること。"},
+{t:"ブロックベット",e:"block bet",c:"アクション",d:"OOP から小さく打ち、相手の大きなベットを防いで安く見せること。"},
+{t:"オーバーベット",e:"overbet",c:"アクション",d:"ポットサイズを超えるベット。ナッツアドバンテージがある極端なポラライズ局面で使う。"},
+{t:"セミブラフ",e:"semi-bluff",c:"アクション",d:"今は勝っていないが、ドローなど改善の見込みを持った状態でのベット。降ろす勝ちと当てる勝ちの二段構え。"},
+{t:"ポットコントロール",e:"pot control",c:"アクション",d:"中程度の強さのハンドで、ポットを膨らませずに安くショーダウンまで持ち込む方針。"},
+{t:"スロープレイ",e:"slow play",c:"アクション",d:"強いハンドをあえて弱く見せて相手の攻撃を誘うこと。多用は禁物。"},
+{t:"レンジベット",e:"range bet",c:"アクション",d:"自分のレンジ全体を小サイズ（1/4〜1/3 ポット）で一律に打つ戦略。"},
+
+{t:"UTG",e:"Under the Gun",c:"ポジション",d:"プリフロップで最初にアクションする席。後ろに人が多いため最もタイトなレンジになる。"},
+{t:"LJ",e:"Lojack",c:"ポジション",d:"HJ のひとつ前。ミドルポジションの終わり。"},
+{t:"HJ",e:"Hijack",c:"ポジション",d:"CO のひとつ前。CO のスチールを横取りする席、が名前の由来。"},
+{t:"CO",e:"Cutoff",c:"ポジション",d:"BTN のひとつ前。BTN をカットする席。スチール頻度が高い。"},
+{t:"BTN",e:"Button",c:"ポジション",d:"ディーラーボタン。ポストフロップで常に最後に行動できる最強のポジション。"},
+{t:"SB",e:"Small Blind",c:"ポジション",d:"強制ベット少額側。ポストフロップは常に OOP で、最も勝ちにくい席。"},
+{t:"BB",e:"Big Blind",c:"ポジション",d:"強制ベット大額側。既に投資済みのためポットオッズが良く、幅広くディフェンスする。"},
+{t:"IP",e:"In Position",c:"ポジション",d:"そのストリートで後に行動する側。情報が多く、実現エクイティが高い。"},
+{t:"OOP",e:"Out of Position",c:"ポジション",d:"先に行動する側。情報が少なく、同じハンドでも価値が目減りする。"},
+{t:"スチール",e:"steal",c:"ポジション",d:"CO・BTN・SB からブラインドを奪う目的のオープンレイズ。"},
+{t:"リスチール",e:"resteal",c:"ポジション",d:"スチールと読んで、ブラインドから広めに3ベットで奪い返すこと。"},
+{t:"ストラドル",e:"straddle",c:"ポジション",d:"BB の左隣が任意で BB の2倍をブラインド前に置く行為。実質的にポジションと SPR が変わる。"},
+
+{t:"ボードテクスチャー",e:"board texture",c:"ボード/ハンド",d:"フロップの性質。ドローが多いほどウェット、少ないほどドライ。ベットサイズ選択の根拠になる。"},
+{t:"レインボー",e:"rainbow",c:"ボード/ハンド",d:"3枚すべてスートが異なるフロップ。フラッシュドローが存在しない。"},
+{t:"ツートーン",e:"two-tone",c:"ボード/ハンド",d:"同じスートが2枚あるフロップ。フラッシュドローが成立する。"},
+{t:"モノトーン",e:"monotone",c:"ボード/ハンド",d:"3枚とも同じスート。既にフラッシュが完成し得るため、レンジが大きく制限される。"},
+{t:"ペアボード",e:"paired board",c:"ボード/ハンド",d:"同じランクが2枚あるボード。トリップスやフルハウスの脅威でコールしづらくなる。"},
+{t:"セット",e:"set",c:"ボード/ハンド",d:"ポケットペア＋ボード1枚のスリーカード。相手に気づかれにくい。"},
+{t:"トリップス",e:"trips",c:"ボード/ハンド",d:"ボードのペア＋手札1枚のスリーカード。キッカー勝負になりやすい。"},
+{t:"オーバーペア",e:"overpair",c:"ボード/ハンド",d:"ボードのどのカードより高いポケットペア。"},
+{t:"ガットショット",e:"gutshot",c:"ボード/ハンド",d:"内側1枚待ちのストレートドロー。アウツ4枚。"},
+{t:"オープンエンド",e:"open-ended",c:"ボード/ハンド",d:"両端待ちのストレートドロー。アウツ8枚。"},
+{t:"バックドア",e:"backdoor",c:"ボード/ハンド",d:"ターンとリバー2枚必要なドロー。エクイティは小さいがブラフ選択の根拠になる。"},
+{t:"キッカー",e:"kicker",c:"ボード/ハンド",d:"役に絡まない手札のうち高い方。同じペア同士の優劣を決める。"},
+{t:"ナッツ",e:"the nuts",c:"ボード/ハンド",d:"そのボードで作り得る最強の役。"},
+
+{t:"GTO",e:"Game Theory Optimal",c:"レンジ/GTO",d:"相手が何をしても搾取されない均衡戦略。守りの基準線であり、必ずしも最大利益ではない。"},
+{t:"エクスプロイト",e:"exploit",c:"レンジ/GTO",d:"相手の偏りに合わせて均衡から意図的にずらし、利益を最大化すること。"},
+{t:"レンジアドバンテージ",e:"range advantage",c:"レンジ/GTO",d:"そのボードで自分のレンジ全体の平均エクイティが相手より高い状態。高頻度ベットの根拠。"},
+{t:"ナッツアドバンテージ",e:"nut advantage",c:"レンジ/GTO",d:"最強クラスの組み合わせを自分だけが多く持つ状態。オーバーベットの根拠。"},
+{t:"ポラライズ",e:"polarized",c:"レンジ/GTO",d:"非常に強い手とブラフの二極構成。大きめのサイズと相性が良い。"},
+{t:"リニア",e:"linear / merged",c:"レンジ/GTO",d:"強い順に上から連続して取ったレンジ。中間の手も含むため小さめサイズと相性が良い。"},
+{t:"キャップドレンジ",e:"capped range",c:"レンジ/GTO",d:"強い手が抜けていて上限が決まっているレンジ。オーバーベットの標的にされる。"},
+{t:"ブロッカー",e:"blocker",c:"レンジ/GTO",d:"自分が持つことで相手の強い組み合わせを減らすカード。ブラフ選択の第一基準。"},
+{t:"コンボ",e:"combo",c:"レンジ/GTO",d:"ハンドの組み合わせ数。AA は6、AKs は4、AKo は12。頻度計算の単位。"},
+{t:"ミックス戦略",e:"mixed strategy",c:"レンジ/GTO",d:"同じハンドを一定確率でベットしたりチェックしたりすること。均衡では EV が等しいために起こる。"},
+{t:"インディファレンス",e:"indifference",c:"レンジ/GTO",d:"コールしてもフォールドしても EV が等しくなる無差別点。相手を迷わせる設計の核。"},
+{t:"MDF",e:"Minimum Defence Frequency",c:"レンジ/GTO",d:"ブラフに一方的に勝たれないための最低ディフェンス頻度。ポット÷（ポット＋ベット）。"},
+{t:"アルファ",e:"alpha",c:"レンジ/GTO",d:"ブラフが即座に成立するのに必要な成功率。ベット÷（ポット＋ベット）。MDF の裏返し。"},
+{t:"ICM",e:"Independent Chip Model",c:"レンジ/GTO",d:"トーナメントでチップ量を賞金期待値に換算するモデル。バブル付近で極端にタイトになる根拠。"},
+
+{t:"EV",e:"Expected Value",c:"数学",d:"その選択を無限回繰り返した時の平均収支。全判断の共通単位。"},
+{t:"エクイティ",e:"equity",c:"数学",d:"現時点でポットを獲得する確率。ショーダウンまで行った場合の取り分。"},
+{t:"実現エクイティ",e:"equity realization",c:"数学",d:"エクイティを実際に回収できる割合。OOP や SPR が浅い局面では100%を下回る。"},
+{t:"フォールドエクイティ",e:"fold equity",c:"数学",d:"相手が降りることで得られる価値。セミブラフの成立条件。"},
+{t:"ポットオッズ",e:"pot odds",c:"数学",d:"コール額÷（ポット＋相手ベット＋コール額）。この数値を超えるエクイティがあればコールが成立。"},
+{t:"インプライドオッズ",e:"implied odds",c:"数学",d:"完成した後に追加で取れる額まで含めたオッズ。ドローのコール根拠になる。"},
+{t:"リバースインプライドオッズ",e:"reverse implied odds",c:"数学",d:"完成しても負ける、あるいはさらに払わされるリスク。弱いドローやドミネイトされた手で発生。"},
+{t:"アウツ",e:"outs",c:"数学",d:"自分を勝ちに導く残りカードの枚数。"},
+{t:"2-4の法則",e:"rule of 2 and 4",c:"数学",d:"アウツ×2 で次の1枚、アウツ×4 でターンとリバー2枚分の的中率の概算。"},
+{t:"SPR",e:"Stack to Pot Ratio",c:"数学",d:"有効スタック÷ポット。低いほどトップペアでもコミットしやすく、高いほどナッツ寄りが必要。"}
+];
+
+var P = {
+"UTG":{en:"Under the Gun",jp:"アンダーザガン"},
+"UTG+1":{en:"Under the Gun +1",jp:"アンダーザガン＋1"},
+"UTG+2":{en:"Under the Gun +2",jp:"アンダーザガン＋2"},
+"LJ":{en:"Lojack",jp:"ロージャック"},
+"HJ":{en:"Hijack",jp:"ハイジャック"},
+"CO":{en:"Cutoff",jp:"カットオフ"},
+"BTN":{en:"Button",jp:"ボタン"},
+"SB":{en:"Small Blind",jp:"スモールブラインド"},
+"BB":{en:"Big Blind",jp:"ビッグブラインド"}
+};
+
+var TABLES = {
+ 9:{order:["UTG","UTG+1","UTG+2","LJ","HJ","CO","BTN","SB","BB"],
+    open:{"UTG":"10%","UTG+1":"12%","UTG+2":"14%","LJ":"17%","HJ":"21%","CO":"27%","BTN":"44%","SB":"40%","BB":"—"},
+    note:{"UTG+2":"MP と呼ばれることもある"}},
+ 6:{order:["UTG","HJ","CO","BTN","SB","BB"],
+    open:{"UTG":"18%","HJ":"22%","CO":"28%","BTN":"45%","SB":"40%","BB":"—"},
+    note:{"UTG":"6max の UTG は LJ と呼ばれることもある","HJ":"MP と呼ばれることもある"}}
+};
+
+var NOTE = {
+"BTN":"ポストフロップで常に IP。最も広く開けて最も勝てる席。",
+"SB":"唯一「オープンしても必ず OOP」になる席。3ベット中心の構成が主流。",
+"BB":"オープンしない席。既に1BB投資済みのためポットオッズでディフェンスする。",
+"CO":"スチールが始まる席。BTN が降りればポジションを取れる。",
+"HJ":"後ろに CO と BTN が残るため、まだ抑えめ。",
+"LJ":"ミドルの終わり。ここから徐々に開き始める。",
+"UTG":"後ろに全員が残っている。最もタイト。",
+"UTG+1":"UTG の次。ほぼ同じくらいタイト。",
+"UTG+2":"MP とも呼ばれる。UTG レンジに少し足す程度。"
+};
+
+/* ========== 共通 ========== */
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function shuffle(a){var x=a.slice(),i,j,t;for(i=x.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=x[i];x[i]=x[j];x[j]=t;}return x;}
+var view=document.getElementById("view");
+document.getElementById("metaCount").innerHTML=TERMS.length+" TERMS<br>9 / 6 MAX";
+
+/* テーブル図 */
+function tableSVG(seats,active,opts){
+  opts=opts||{};
+  var W=340,H=250,cx=170,cy=122,rx=128,ry=82,i,s='';
+  s+='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">';
+  s+='<defs><pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse">'+
+     '<path d="M10 0H0V10" fill="none" stroke="#2C4258" stroke-width="0.4" opacity="0.35"/></pattern></defs>';
+  s+='<rect width="'+W+'" height="'+H+'" fill="url(#g)"/>';
+  s+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(rx-26)+'" ry="'+(ry-22)+'" fill="none" stroke="#3E5B76"/>';
+  s+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(rx-34)+'" ry="'+(ry-30)+'" fill="none" stroke="#2C4258" stroke-dasharray="3 4"/>';
+  s+='<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="#8AA2B8" letter-spacing="1.2">'+seats.length+'-MAX</text>';
+  s+='<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="#3E5B76" letter-spacing="1.6">ACTION ORDER</text>';
+  for(i=0;i<seats.length;i++){
+    var ang=(90+i*360/seats.length)*Math.PI/180;
+    var x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang);
+    var on=(i===active), faded=(opts.dim&&!on);
+    s+='<g data-seat="'+i+'" style="cursor:'+(opts.clickable?'pointer':'default')+'" opacity="'+(faded?0.45:1)+'">';
+    if(on) s+='<circle cx="'+x+'" cy="'+y+'" r="26" fill="#F0A63C" opacity="0.12"/>';
+    s+='<rect x="'+(x-21)+'" y="'+(y-15)+'" width="42" height="30" rx="2" fill="'+(on?'#F0A63C':'#1B2836')+'" stroke="'+(on?'#F0A63C':'#3E5B76')+'"/>';
+    var label = opts.hide ? '?' : seats[i];
+    var fs = (label.length>3)?10:12;
+    var tfill = on ? '#0D141C' : (opts.hide ? '#3E5B76' : '#E6EDF3');
+    s+='<text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-family="var(--mono)" font-size="'+fs+'" font-weight="700" fill="'+tfill+'">'+label+'</text>';
+    s+='<text x="'+(x-26)+'" y="'+(y-12)+'" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="'+(on?'#F0A63C':'#8AA2B8')+'">'+(i+1<10?'0':'')+(i+1)+'</text>';
+    if(seats[i]==="BTN"&&!opts.hide){
+      s+='<circle cx="'+(x+26)+'" cy="'+(y+12)+'" r="7" fill="#E6EDF3"/>';
+      s+='<text x="'+(x+26)+'" y="'+(y+15.5)+'" text-anchor="middle" font-family="var(--mono)" font-size="8" font-weight="700" fill="#0D141C">D</text>';
+    }
+    s+='</g>';
+  }
+  return s+'</svg>';
+}
+function bindSeats(root,fn){
+  var gs=root.querySelectorAll("g[data-seat]"),i;
+  for(i=0;i<gs.length;i++){
+    (function(g){g.addEventListener("click",function(){fn(parseInt(g.getAttribute("data-seat"),10));});})(gs[i]);
+  }
+}
+
+/* ========== 1. 用語カード ========== */
+var fc={cat:"すべて",queue:shuffle(TERMS),flip:false,done:0};
+function fcPool(){return fc.cat==="すべて"?TERMS:TERMS.filter(function(t){return t.c===fc.cat;});}
+function fcReset(){fc.queue=shuffle(fcPool());fc.flip=false;fc.done=0;}
+
+function renderTerms(){
+  var pool=fcPool(),card=fc.queue[0],h='';
+  h+='<div class="chips">';
+  h+='<button class="chip'+(fc.cat==="すべて"?" on":"")+'" data-cat="すべて">すべて</button>';
+  CATS.forEach(function(c){h+='<button class="chip'+(fc.cat===c?" on":"")+'" data-cat="'+c+'">'+c+'</button>';});
+  h+='</div>';
+  h+='<div class="between"><div class="lab">残り '+fc.queue.length+' / 覚えた '+fc.done+'</div>'+
+     '<button id="reshuffle" style="font-family:var(--mono);font-size:10px;color:var(--dim);background:none;border:0;letter-spacing:.1em;cursor:pointer">RESHUFFLE</button></div>';
+  h+='<div class="bar"><i style="width:'+(fc.done/Math.max(pool.length,1)*100)+'%"></i></div>';
+
+  if(!card){
+    h+='<div style="border:1px solid var(--line2);background:var(--plate);padding:28px;text-align:center">'+
+       '<div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--amber);margin-bottom:10px">DECK CLEARED</div>'+
+       '<div style="font-size:14px;margin-bottom:18px">'+esc(fc.cat)+' を '+fc.done+' 枚さばいた。もう一周する？</div>'+
+       '<button class="btn amber" id="again2">もう一周</button></div>';
+  }else{
+    h+='<div class="flipwrap" id="flipwrap"><div class="flip'+(fc.flip?" on":"")+'" id="flip">'+
+       '<div class="face front"><div class="eyebrow">'+esc(card.c)+'</div>'+
+       '<div class="term">'+esc(card.t)+'</div><div class="en">'+esc(card.e)+'</div>'+
+       '<div class="tapnote">TAP TO REVEAL</div></div>'+
+       '<div class="face back"><div class="backterm">'+esc(card.t)+'</div><div class="def">'+esc(card.d)+'</div></div>'+
+       '</div></div>';
+    h+='<div class="two"><button class="btn" id="againBtn">もう一度</button><button class="btn amber" id="knowBtn">覚えた</button></div>';
+  }
+  view.innerHTML=h;
+
+  var chips=view.querySelectorAll(".chip"),i;
+  for(i=0;i<chips.length;i++){(function(b){b.addEventListener("click",function(){fc.cat=b.getAttribute("data-cat");fcReset();renderTerms();});})(chips[i]);}
+  var rs=view.querySelector("#reshuffle"); if(rs) rs.addEventListener("click",function(){fcReset();renderTerms();});
+  var a2=view.querySelector("#again2"); if(a2) a2.addEventListener("click",function(){fcReset();renderTerms();});
+  var fw=view.querySelector("#flipwrap");
+  if(fw) fw.addEventListener("click",function(){fc.flip=!fc.flip;view.querySelector("#flip").className="flip"+(fc.flip?" on":"");});
+  var ab=view.querySelector("#againBtn");
+  if(ab) ab.addEventListener("click",function(){if(fc.queue.length>1){fc.queue=fc.queue.slice(1).concat([fc.queue[0]]);}fc.flip=false;renderTerms();});
+  var kb=view.querySelector("#knowBtn");
+  if(kb) kb.addEventListener("click",function(){fc.queue=fc.queue.slice(1);fc.done++;fc.flip=false;renderTerms();});
+}
+
+/* ========== 2. ポジション図 ========== */
+var pm={size:9,sel:0};
+function renderMap(){
+  var T=TABLES[pm.size],seats=T.order,key=seats[pm.sel],info=P[key],h='';
+  h+='<div class="row" style="margin-bottom:16px">';
+  [9,6].forEach(function(n){h+='<button class="seg'+(pm.size===n?" on":"")+'" data-size="'+n+'">'+n+'-MAX</button>';});
+  h+='</div>';
+  h+='<div class="panel" id="mapPanel">'+tableSVG(seats,pm.sel,{clickable:true})+'</div>';
+  h+='<div class="detail"><div class="between"><div class="code">'+esc(key)+'</div>'+
+     '<div class="lab">ACTION '+(pm.sel+1<10?'0':'')+(pm.sel+1)+' / '+seats.length+'</div></div>'+
+     '<div class="en" style="margin-top:2px">'+esc(info.en)+'</div>'+
+     '<div style="font-size:14px;margin-top:2px">'+esc(info.jp)+'</div>'+
+     '<div class="hr"></div><div class="body">'+esc(NOTE[key])+'</div>';
+  if(T.note&&T.note[key]) h+='<div class="sub">※ '+esc(T.note[key])+'</div>';
+  h+='<div style="display:flex;align-items:center;gap:12px;margin-top:16px">'+
+     '<div class="lab">Open range 目安</div>'+
+     '<div style="font-family:var(--mono);font-size:18px">'+T.open[key]+'</div></div></div>';
+  h+='<div class="hint">オープンレンジ％は100BBキャッシュのざっくり目安。席をタップで切り替え。</div>';
+  view.innerHTML=h;
+
+  var segs=view.querySelectorAll(".seg"),i;
+  for(i=0;i<segs.length;i++){(function(b){b.addEventListener("click",function(){pm.size=parseInt(b.getAttribute("data-size"),10);pm.sel=0;renderMap();});})(segs[i]);}
+  bindSeats(view.querySelector("#mapPanel"),function(i){pm.sel=i;renderMap();});
+}
+
+/* ========== 3. クイズ ========== */
+var qz={mode:"both",q:null,picked:null,ok:0,n:0,streak:0,best:0};
+function pickSize(){return qz.mode==="both"?(Math.random()<0.5?9:6):parseInt(qz.mode,10);}
+function makeQ(){
+  var size=pickSize(),seats=TABLES[size].order;
+  var i=Math.floor(Math.random()*seats.length);
+  var dir=Math.random()<0.5?"seat2name":"name2seat";
+  var q={size:size,dir:dir,index:i,answer:seats[i]};
+  if(dir==="seat2name"){
+    var wrong=shuffle(seats.filter(function(s){return s!==seats[i];})).slice(0,3);
+    q.choices=shuffle([seats[i]].concat(wrong));
+  }
+  return q;
+}
+function answer(val){
+  if(qz.picked!==null) return;
+  qz.picked=val; qz.n++;
+  if(val===qz.q.answer){qz.ok++;qz.streak++;if(qz.streak>qz.best)qz.best=qz.streak;}
+  else{qz.streak=0;}
+  renderQuiz();
+}
+function renderQuiz(){
+  if(!qz.q) qz.q=makeQ();
+  var q=qz.q,seats=TABLES[q.size].order,h='';
+  h+='<div class="row" style="margin-bottom:16px">';
+  [["both","9 & 6"],["9","9-MAX"],["6","6-MAX"]].forEach(function(m){
+    h+='<button class="seg cy'+(qz.mode===m[0]?" on":"")+'" data-mode="'+m[0]+'">'+m[1]+'</button>';});
+  h+='</div>';
+  h+='<div class="between" style="margin-bottom:12px"><div class="lab">正解 '+qz.ok+' / '+qz.n+'</div>'+
+     '<div class="lab">連続 '+qz.streak+'（最高 '+qz.best+'）</div></div>';
+
+  var answered = qz.picked!==null;
+  var active = q.dir==="seat2name" ? q.index : (answered ? seats.indexOf(q.answer) : -1);
+  var hide = !answered;
+  h+='<div class="panel" id="quizPanel">';
+  h+='<div class="q">'+(q.dir==="seat2name"
+      ? '点灯している席は？<span class="sz">'+q.size+'-MAX</span>'
+      : '<span class="code-s">'+q.answer+'</span> の席をタップ<span class="sz">'+q.size+'-MAX</span>')+'</div>';
+  h+=tableSVG(seats,active,{dim:q.dir==="seat2name",hide:hide,clickable:(q.dir==="name2seat"&&qz.picked===null)});
+  h+='</div>';
+
+  if(q.dir==="seat2name"){
+    h+='<div class="two" style="margin-top:12px">';
+    q.choices.forEach(function(ch){
+      var cls="choice";
+      if(qz.picked!==null){ cls += (ch===q.answer)?" ok":((ch===qz.picked)?" ng":" off"); }
+      h+='<button class="'+cls+'" data-choice="'+ch+'">'+ch+'</button>';
+    });
+    h+='</div>';
+  }
+
+  if(qz.picked!==null){
+    var ok=(qz.picked===q.answer);
+    h+='<div class="result '+(ok?"ok":"ng")+'"><div class="verdict" style="color:'+(ok?"var(--green)":"var(--red)")+'">'+(ok?"CORRECT":"WRONG")+'</div>'+
+       '<div class="body"><span style="font-family:var(--mono);font-weight:700;color:var(--amber)">'+q.answer+'</span> = '+
+       esc(P[q.answer].jp)+'（'+esc(P[q.answer].en)+'）／ アクション '+(q.index+1)+' 番目。'+esc(NOTE[q.answer])+'</div></div>';
+  }
+  h+='<div style="margin-top:12px"><button class="btn'+(qz.picked!==null?" amber":"")+'" id="nextBtn"'+(qz.picked===null?" disabled":"")+'>次の問題</button></div>';
+  view.innerHTML=h;
+
+  var segs=view.querySelectorAll(".seg"),i;
+  for(i=0;i<segs.length;i++){(function(b){b.addEventListener("click",function(){
+    qz.mode=b.getAttribute("data-mode");qz.picked=null;qz.q=makeQ();renderQuiz();});})(segs[i]);}
+  var chs=view.querySelectorAll(".choice");
+  for(i=0;i<chs.length;i++){(function(b){b.addEventListener("click",function(){answer(b.getAttribute("data-choice"));});})(chs[i]);}
+  if(q.dir==="name2seat"&&qz.picked===null){ bindSeats(view.querySelector("#quizPanel"),function(i){answer(seats[i]);}); }
+  var nb=view.querySelector("#nextBtn");
+  if(nb) nb.addEventListener("click",function(){qz.picked=null;qz.q=makeQ();renderQuiz();});
+}
+
+/* ========== タブ ========== */
+var tabs=document.querySelectorAll(".tab");
+function show(id){
+  for(var i=0;i<tabs.length;i++){tabs[i].className="tab"+(tabs[i].getAttribute("data-tab")===id?" on":"");}
+  if(id==="terms") renderTerms();
+  else if(id==="map") renderMap();
+  else renderQuiz();
+}
+for(var i=0;i<tabs.length;i++){
+  (function(b){b.addEventListener("click",function(){show(b.getAttribute("data-tab"));});})(tabs[i]);
+}
+show("terms");
+</script>
+<script>
+/* Service Worker 登録（ホーム画面インストールとオフライン動作に必要） */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
